@@ -26,18 +26,18 @@ Crafty.scene('Game', function() {
 			if (at_edge) {
 				// Place a tree entity at the current tile
 				Crafty.e('Tree').at(x,y);
-				this.occupied[x][y] = true;				
+				this.occupied[x][y] = true;
 		} else if (Math.random() < 0.03 && x != 5 && y !=5) {
 				// Place a bush entity at the current tile
-				i++;
+				/*i++;
 				Crafty.e('Bush').at(x,y);
-				this.occupied[x][y] = true;
+				this.occupied[x][y] = true;*/
 			}
 		}
 	}
 
 	// Generate up to five villages on the map in random locations
-	var max_followers = 5;
+	var max_followers = 1;
 	this.camels = Array();
 	var camelCount = 0;
 	for (var x = 0; x < Game.map_grid.width; x++) {
@@ -63,7 +63,7 @@ Crafty.scene('Loading', function(){
 	.text('Loading; please wait...')
 	.attr({ x: 0, y: Game.height()/2 - 24, w: Game.width() })
 	.css($text_css);
- 
+
   // Load our sprite map image
   Crafty.load([
 	'assets/actors/camel.png',
@@ -71,7 +71,7 @@ Crafty.scene('Loading', function(){
 	'assets/actors/lead_camel_white.png',
 	], function(){
 	// Once the images are loaded...
- 
+
 	// Define the PC's sprite to be the first sprite in the third row of the
 	//  animation sprite map
 	Crafty.sprite(32, 32, 'assets/actors/camel_32.png', {
@@ -85,7 +85,7 @@ Crafty.scene('Loading', function(){
 	Crafty.sprite(32, 40, 'assets/actors/lead_camel_white.png', {
 		spr_lead_camel_white:  [0, 1, 0, 0],
 	});
- 
+
 	// Now that our sprites are ready to draw, start the game
 	Crafty.scene('Game');
   })

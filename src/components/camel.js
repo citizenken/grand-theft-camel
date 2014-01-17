@@ -1,58 +1,53 @@
 	// Camel is just an Actor with a certain color
 	Crafty.c('Camel', {
 		init: function() {
-			this.requires('Solid, Actor, Fourway, SpriteAnimation, Collision, spr_camel')
+			this.requires('Solid, Actor, Fourway, SpriteAnimation, Collision, spr_camel, RandomMovement')
 				.attr({steps:0, direction:null, maxSteps:0, targetLocation:{x:400, y:400}})
-				.reel('PlayerMovingUp', 400, 0, 9, 3)
-				.reel('PlayerMovingRight', 400, 0, 2, 11)
-				// .reel('PlayerMovingDown',  0, 2, 2)
-				.reel('PlayerMovingLeft', 400, 0, 8, 11)
-				// var camelDir = this.attr.direction
-				// .move('e', 1)
-				.bind('EnterFrame', function() {
-					this.moveCamel();
-				})
+				.reel('CamelMovingUp', 400, 0, 9, 3)
+				.reel('CamelMovingRight', 400, 0, 2, 11)
+				.reel('CamelMovingDown',  400, 0, 9, 3)
+				.reel('CamelMovingLeft', 400, 0, 8, 11)
 				.onHit('Scenery', function() {
 					this.stopMovement();
+				this._speed = 2;
 				})
 		},
 
-		moveCamel: function() {
-			var target = this.targetLocation
-			target.x = 25;
-			target.y = 25;
-			var distanceToTarget = Crafty.math.distance(this.x, this.y, target.x, target.y);
-			if (Crafty.math.distance() == 0) {
-				console.log(this._entityName)
-			}
-
-			this.diffx = this.x - target.x;
-			console.log(this.diffx)
-			this.diffy = this.y - target.y;
-
-			this._angle = (180 / Math.PI) * Math.atan(this.diffy / this.diffx);
-			this._angle = (this.diffX < 0 ? 180 : 0) + this._angle;
-
-			this.x += Math.round((Math.cos(this._angle * (Math.PI / 180)) * 2));
-			this.y += Math.round((Math.sin(this._angle * (Math.PI / 180)) * 2));
-
+		animateCamel: function(diffx, diffy) {
+			// if (diffx > diffy) {
+				if (diffx > 0) {
+					console.log('this')
+					this.animate('CamelMovingLeft', -1);
+				} else {
+					console.log('that')
+					this.animate('CamelMovingRight', -1);
+				}
+			// } else {
+				/*if (diffy > 0) {
+					this.animate('CamelMovingUp', -1);
+				} else {
+					this.animate('CamelMovingDown', -1);
+				}*/
+			// }
 		},
-
-		createRandomTarget: function() {
-            var x = Math.round(Crafty.math.randomNumber(1, 39));
-            var y = Math.round(Crafty.math.randomNumber(1, 39));
-            // console.log(x, y)
-            
-            return {x: x, y: y};
-        },
 
 		stopMovement: function() {
 			this._speed = 0;
-			if (this._movement) {
-			  this.x -= this._movement.x;
-			  this.y -= this._movement.y;
-			}
+			// this.removeComponent('RandomMovement');
+			//this.unbind('EnterFrame');
+			// this.changeDirection();
 		},
+
+		changeDirection: function() {
+			this.targetLocation = this.createRandomTarget();
+			// console.log(th?is._speed)
+			var delayValue = 1000;
+			this.timeout(function() {
+				this._speed = 2;
+				this.toggleComponent('RandomMovement');
+				this.trigger('Moved');
+			}, 1000);
+		}
 
 	});
 

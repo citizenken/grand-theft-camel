@@ -50,6 +50,7 @@
 
 		// Stops the movement
 		stopMovement: function(data) {
+			console.log(this._movement);
 			if (this.steps > 0) {
 				this.steps = 0;
 			}
@@ -126,7 +127,7 @@
 							Game.playerKeys['M'] = false;
 							break;
 					}
-				})				
+				})
 				.onHit('Follower', function(data) {if (!data[0].obj._parent) {this.addFollower(data)}})
 				.onHit('Solid', function(data) {this.stopMovement(data)}, this.resumeMovement)
 				.reel('LeadCamelMovingUp', 400, 0, 2, 3)
@@ -212,7 +213,7 @@
 					newPlayer.x = this.x;
 					newPlayer.y = this.y + Game.map_grid.tile.width;
 					break;
-			}			
+			}
 			var newCamel = Crafty.e('Follower');
 			newCamel.x = this.x;
 			newCamel.y = this.y;
