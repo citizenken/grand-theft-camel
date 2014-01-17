@@ -1,110 +1,3 @@
-	// The Grid component allows an element to be located
-	//  on a grid of tiles
-	Crafty.c('Grid', {
-	init: function() {
-		this.attr({
-			w: Game.map_grid.tile.width,
-			h: Game.map_grid.tile.height
-		})
-	},
-
-	// Locate this entity at the given position on the grid
-	at: function(x, y) {
-	if (x === undefined && y === undefined) {
-	  return { x: this.x/Game.map_grid.tile.width, y: this.y/Game.map_grid.tile.height }
-	} else {
-	  this.attr({ x: x * Game.map_grid.tile.width, y: y * Game.map_grid.tile.height });
-	  return this;
-	}
-	}
-	});
-
-	// An "Actor" is an entity that is drawn in 2D on canvas
-	//  via our logical coordinate grid
-	Crafty.c('Actor', {
-	init: function() {
-	this.requires('2D, Canvas, Grid');
-	},
-	});
-
-	Crafty.c('Scenery', {
-	init: function() {
-	this.requires('Actor, Color, Solid, Collision')
-	  .color('rgb(20, 125, 40)');
-	},
-	});
-
-	// A Tree is just an Actor with a certain color
-	Crafty.c('Tree', {
-	init: function() {
-	this.requires('Scenery')
-	  .color('rgb(20, 125, 40)');
-	},
-	});
-
-	// A Bush is just an Actor with a certain color
-	Crafty.c('Bush', {
-	init: function() {
-	this.requires('Scenery')
-	  .color('rgb(20, 185, 40)');
-	},
-	});
-
-	// Camel is just an Actor with a certain color
-	Crafty.c('Camel', {
-		init: function() {
-			this.requires('Solid, Actor, Fourway, SpriteAnimation, Collision, spr_camel')
-				.attr({steps:0, direction:null, maxSteps:0, targetLocation:{x:400, y:400}})
-				.reel('PlayerMovingUp', 400, 0, 9, 3)
-				.reel('PlayerMovingRight', 400, 0, 2, 11)
-				// .reel('PlayerMovingDown',  0, 2, 2)
-				.reel('PlayerMovingLeft', 400, 0, 8, 11)
-				// var camelDir = this.attr.direction
-				// .move('e', 1)
-				.bind('EnterFrame', function() {
-					this.moveCamel();
-				})
-				.onHit('Scenery', function() {
-					this.stopMovement();
-				})
-		},
-
-		moveCamel: function() {
-			var target = this.targetLocation
-			if (this.x > target.x) {
-				this.x -= 1;
-			} else if (this.x < target.x) {
-				this.x += 1;
-			}
-
-			if (this.y > target.y) {
-				this.y -=1;
-			} else if (this.y < target.y) {
-				this.y += 1;
-			}
-
-			if (this.x == target.x && this.y == target.y) {
-				this.targetLocation = this.createRandomTarget();
-			}
-		},
-
-		createRandomTarget: function() {
-            var x = Math.random() * (Crafty.viewport.width  - 32);
-            var y = Math.random() * (Crafty.viewport.height - 32);
-
-            return {x: x, y: y};
-        },
-
-		stopMovement: function() {
-			this._speed = 0;
-			if (this._movement) {
-			  this.x -= this._movement.x;
-			  this.y -= this._movement.y;
-			}
-		},
-
-	});
-
 	Crafty.c('Player', {
 		init: function() {
 			this.requires('Actor, Fourway, Collision, SpriteAnimation, Solid, spr_white_player')
@@ -233,7 +126,7 @@
 							Game.playerKeys['M'] = false;
 							break;
 					}
-				})
+				})				
 				.onHit('Follower', function(data) {if (!data[0].obj._parent) {this.addFollower(data)}})
 				.onHit('Solid', function(data) {this.stopMovement(data)}, this.resumeMovement)
 				.reel('LeadCamelMovingUp', 400, 0, 2, 3)
@@ -319,7 +212,7 @@
 					newPlayer.x = this.x;
 					newPlayer.y = this.y + Game.map_grid.tile.width;
 					break;
-			}
+			}			
 			var newCamel = Crafty.e('Follower');
 			newCamel.x = this.x;
 			newCamel.y = this.y;
@@ -393,73 +286,5 @@
 				}
 			}
 		}
-
-	});
-
-	//Follower
-	Crafty.c('Follower', {
-		colors: Array('blue','yellow','red','orange','rgb(0,0,0)','rgb(255,255,255)'),
-		init: function() {
-			this.requires('Actor, Collision, Camel')
-			 	.attr({previousLocation:{'x':0,'y':0}})
-				.onHit('Scenery', function(data) {
-					if (this._parent) {
-						this.moveOffScenery(data)
-					}})
-			},
-
-			moveOffScenery: function(data) {
-				var LeadCamel = this._parent;
-				this.z = LeadCamel.z - 5;
-				var followersIndex = LeadCamel.followers.indexOf(this);
-				switch (LeadCamel.attr.direction)
-					{
-						case 'UP':
-								this.x = LeadCamel.x;
-								this.y = data[0].obj.y - Game.map_grid.tile.width;
-								if (LeadCamel.followers.length > 1) {
-									this.moveSubsequentFollowers(followersIndex, this.x, this.y);
-								}
-							break;
-						case 'DOWN':
-								this.x = LeadCamel.x;
-								this.y = data[0].obj.y + Game.map_grid.tile.width;
-								if (LeadCamel.followers.length > 1) {
-									this.moveSubsequentFollowers(followersIndex, this.x, this.y);
-								}
-							break;
-						case 'LEFT':
-								this.x = data[0].obj.x - Game.map_grid.tile.width;
-								this.y = LeadCamel.y;
-								if (LeadCamel.followers.length > 1) {
-									this.moveSubsequentFollowers(followersIndex, this.x, this.y);
-								}
-							break;
-						case 'RIGHT':
-								this.x = data[0].obj.x + Game.map_grid.tile.width;// Math.abs(data[0].overlap);
-								this.y = LeadCamel.y;
-								if (LeadCamel.followers.length > 1) {
-									this.moveSubsequentFollowers(followersIndex, this.x, this.y);
-								}
-							break;
-					}
-			},
-
-			moveSubsequentFollowers: function(followersIndex, x, y) {
-				var LeadCamel = this._parent;
-				for (var i = followersIndex + 1; i < LeadCamel.followers.length; i++) {
-					LeadCamel.followers[i].z = LeadCamel.followers[i - 1].z;
-					LeadCamel.followers[i].x = x;
-					LeadCamel.followers[i].y = y;
-				}
-			},
-
-			// Stops the movement
-			stopParent: function() {
-			//var parent = LeadCamel
-			this.z = LeadCamel.z-50;
-			this.x = LeadCamel.x;
-			this.y = LeadCamel.y;
-			}
 
 	});

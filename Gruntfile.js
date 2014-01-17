@@ -25,9 +25,9 @@ module.exports = function(grunt) {
           'lib/grand-theft-camel.js': [
             'lib/crafty.js',
             'src/game.js',
-            'src/components.js',
+            /*'src/components.js',*/
             'src/scenes.js',
-            // 'src/components/**/*.js'
+            'src/components/**/*.js'
           ]
         }
       }

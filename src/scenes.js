@@ -27,15 +27,6 @@ Crafty.scene('Game', function() {
 				// Place a tree entity at the current tile
 				Crafty.e('Tree').at(x,y);
 				this.occupied[x][y] = true;				
-				/*Math.random returns a number from 0-1. <.06 is used to reduce
-				the number of bushes placed, as the random number has to be under that int.
-				The higher the int, the more squares, as is it easier to be under that int.
-				Placing it in the else if statement further reduces the number of bushes
-				because it can't be in any
-				edge squares. Adding an incriment puts a hard lock on the # of 
-				bushes < 24, as 24 is the absolute most due to the grid width. One problem with this is if the int
-				is big and the incriment is too, the squares will be stacked on the left side because it will hit the 
-				incriment cap earlier*/
 		} else if (Math.random() < 0.03 && x != 5 && y !=5) {
 				// Place a bush entity at the current tile
 				i++;
