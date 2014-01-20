@@ -1,53 +1,78 @@
 	// Camel is just an Actor with a certain color
 	Crafty.c('Camel', {
 		init: function() {
-			this.requires('Solid, Actor, Fourway, SpriteAnimation, Collision, spr_camel, RandomMovement')
-				.attr({steps:0, direction:null, maxSteps:0, targetLocation:{x:400, y:400}})
-				.reel('CamelMovingUp', 400, 0, 9, 3)
+			this.requires('Solid, Actor, Fourway, SpriteAnimation, Collision, spr_camel, TargetMovement')
+				.attr({steps:0, direction:null, maxSteps:0, targetLocation:{x:0, y:0}});
+				this.attr.maxSteps = Math.round(Crafty.math.randomNumber(50, 100));
+				this._speed = 1;
+				this._oldMovementx;
+				this._oldMovementy;
+				this.reel('CamelMovingUp', 400, 0, 9, 3)
 				.reel('CamelMovingRight', 400, 0, 2, 11)
-				.reel('CamelMovingDown',  400, 0, 9, 3)
+				// .reel('CamelMovingDown',  400, 0, 9, 3)
 				.reel('CamelMovingLeft', 400, 0, 8, 11)
-				.onHit('Scenery', function() {
-					this.stopMovement();
-				this._speed = 2;
+				.onHit('Scenery', function(data) {
+					if (this.has('TargetMovement')) {
+						this.changeDirection();
+					} else if (this.has('Follower')) {
+						this.moveOffScenery(data);
+					}
+				})
+				.bind('NewDirection', function(movement) {
+					// console.log('old x', this._oldMovementx, 'old y', this._oldMovementy, 'new', this._movement)
+					// console.log(movement.x != this._oldMovementx || movement.y != this._oldMovementy)
+					if (movement.x != this._oldMovementx || movement.y != this._oldMovementy) {
+						if (movement.y == -1) {
+							this.animate('CamelMovingUp', -1);
+							this._oldMovementx = movement.x;
+							this._oldMovementy = movement.y;
+						} else if (movement.y == 1) {
+							console.log('move south');
+							this._oldMovementx = movement.x;
+							this._oldMovementy = movement.y;
+						} else if (movement.x == 1) {
+							this.animate('CamelMovingRight', -1)
+							this._oldMovementx = movement.x;
+							this._oldMovementy = movement.y;
+						} else if (movement.x == -1 && !this.isPlaying('CamelMovingUp')) {
+							this.animate('CamelMovingLeft', -1)
+							this._oldMovementx = movement.x;
+							this._oldMovementy = movement.y;
+						} else {
+							this.pauseAnimation()
+						}
+					}	
 				})
 		},
 
-		animateCamel: function(diffx, diffy) {
-			// if (diffx > diffy) {
-				if (diffx > 0) {
-					console.log('this')
-					this.animate('CamelMovingLeft', -1);
-				} else {
-					console.log('that')
-					this.animate('CamelMovingRight', -1);
-				}
-			// } else {
-				/*if (diffy > 0) {
-					this.animate('CamelMovingUp', -1);
-				} else {
-					this.animate('CamelMovingDown', -1);
-				}*/
-			// }
+		generateMaxSteps: function() {
+			this.attr.maxSteps = Math.round(Crafty.math.randomNumber(250, 500));
 		},
 
-		stopMovement: function() {
-			this._speed = 0;
-			// this.removeComponent('RandomMovement');
-			//this.unbind('EnterFrame');
-			// this.changeDirection();
+		animateEntity: function(directionData) {
+			//console.log(directionData);
 		},
 
 		changeDirection: function() {
 			this.targetLocation = this.createRandomTarget();
-			// console.log(th?is._speed)
-			var delayValue = 1000;
-			this.timeout(function() {
-				this._speed = 2;
-				this.toggleComponent('RandomMovement');
-				this.trigger('Moved');
-			}, 1000);
-		}
+			this.generateMaxSteps();
+			if (this._movement) {
+			  this.x -= this._movement.x;
+			  this.y -= this._movement.y;
+			}
+			var delayValue = Math.round(Crafty.math.randomNumber(1000, 2000));
+			this.timeout;(function() {
+				console.log('5000 later')
+				this.trigger('Moved')
+			}, 5000);
+		},
+
+		createRandomTarget: function() {
+            var x = Math.round(Crafty.math.randomNumber(32, Game.map_grid.width * 35));
+            var y = Math.round(Crafty.math.randomNumber(32, Game.map_grid.height * 14));
+
+            return {x: x, y: y};
+        },
 
 	});
 

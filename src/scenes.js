@@ -27,29 +27,45 @@ Crafty.scene('Game', function() {
 				// Place a tree entity at the current tile
 				Crafty.e('Tree').at(x,y);
 				this.occupied[x][y] = true;
-		} else if (Math.random() < 0.03 && x != 5 && y !=5) {
+		} else if (Math.random() < 0.01 && x != 5 && y !=5) {
 				// Place a bush entity at the current tile
-				/*i++;
+				i++;
 				Crafty.e('Bush').at(x,y);
-				this.occupied[x][y] = true;*/
+				this.occupied[x][y] = true;
 			}
 		}
 	}
 
 	// Generate up to five villages on the map in random locations
-	var max_followers = 1;
+	var max_camels = Math.round(Crafty.math.randomNumber(0, 5));
+	console.log(max_camels)
 	this.camels = Array();
 	var camelCount = 0;
 	for (var x = 0; x < Game.map_grid.width; x++) {
 		for (var y = 0; y < Game.map_grid.height; y++) {
 			if (Math.random() < 0.02) {
-				if (Crafty('Camel').length <= max_followers && !this.occupied[x][y]) {
+				if (Crafty('Camel').length <= max_camels && !this.occupied[x][y]) {
 					this.camels[camelCount] = Crafty.e('Camel').at(x, y);
 					this.camels[camelCount].targetLocation = this.camels[camelCount].createRandomTarget();
 				}
 			}
 		}
 	}
+
+//create enemies
+	for (var i = 0; i < 4;) {
+		var enemy_x = Math.round(Crafty.math.randomNumber(1, 37));
+		var enemy_y = Math.round(Crafty.math.randomNumber(1, 18));
+		if (!this.occupied[enemy_x][enemy_y]) {
+			this.enemy = Crafty.e('Enemy').at(enemy_x, enemy_y);
+			break;
+		} else {
+			i++
+		}
+	}
+
+	Game.enemy = this.enemy;
+
 	Game.camels = this.camels;
 });
 

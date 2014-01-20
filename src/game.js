@@ -21,6 +21,7 @@ Game = {
 	},
 
 	playerKeys: Array(),
+	playerLocation: Object,
 	//initialize and start game
 	start: function() {
 		//Start crafty and set background color
