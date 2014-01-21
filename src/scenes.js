@@ -96,6 +96,7 @@ Crafty.scene('Loading', function(){
 
 	Crafty.sprite(32, 32, 'assets/actors/player_character.png', {
 		spr_white_player:  [1, 0, 0, 0],
+		spr_blue_enemy:  [1, 6, 0, 0],
 	});
 
 	Crafty.sprite(32, 40, 'assets/actors/lead_camel_white.png', {

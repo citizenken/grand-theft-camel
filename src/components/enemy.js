@@ -1,6 +1,6 @@
 	Crafty.c('Enemy', {
 		init: function() {
-			this.requires('Actor, Fourway, Collision, SpriteAnimation, spr_white_player, TargetMovement')
+			this.requires('Actor, Fourway, Collision, SpriteAnimation, spr_blue_enemy, TargetMovement')
 				.attr({steps:0, direction:null, maxSteps:0, aggroDistance:200, targetLocation: {x:null, y:null}});
 				this._speed = 1;
 				this.bind('EnterFrame', function() {
@@ -13,10 +13,10 @@
 					}
 					this.trigger('Moved');
 				})
-				.reel('EnemyUp', 400, 0, 2, 3)
-				.reel('EnemyDown', 400, 0, 0, 3)
-				.reel('EnemyRight',400, 0, 3, 3)
-				.reel('EnemyLeft', 400, 0, 1, 3)
+				.reel('EnemyUp', 400, 0, 4, 3)
+				.reel('EnemyDown', 400, 0, 6, 3)
+				.reel('EnemyRight',400, 0, 5, 3)
+				.reel('EnemyLeft', 400, 0, 7, 3)
 				.bind('NewDirection', function(movement) {
 					if (movement.x != this._oldMovementx || movement.y != this._oldMovementy) {
 						if (movement.y == -1) {
@@ -38,7 +38,7 @@
 						} else {
 							this.pauseAnimation()
 						}
-					}	
+					}
 				})
 				.onHit('Scenery', function(data) {
 					if (this.has('TargetMovement')) {
