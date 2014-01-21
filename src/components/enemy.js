@@ -1,10 +1,16 @@
 	Crafty.c('Enemy', {
 		init: function() {
-			this.requires('Actor, Fourway, Collision, SpriteAnimation, Solid, spr_white_player, TargetMovement')
-				.attr({steps:0, direction:null, maxSteps:0, targetLocation: {x:null, y:null}});
+			this.requires('Actor, Fourway, Collision, SpriteAnimation, spr_white_player, TargetMovement')
+				.attr({steps:0, direction:null, maxSteps:0, aggroDistance:200, targetLocation: {x:null, y:null}});
 				this._speed = 1;
 				this.bind('EnterFrame', function() {
-					// this.targetLocation = {x:Crafty.e('Player'), y:Crafty.e('Player')};
+					var player = Game.playerLocation;
+					if (player) {
+						var distanceToPlayer = Crafty.math.distance(player.x, player.y, this.x, this.y);
+						if (distanceToPlayer < this.aggroDistance) {
+								this.targetLocation = {x:player.x, y:player.y};
+						}
+					}
 					this.trigger('Moved');
 				})
 				.reel('EnemyUp', 400, 0, 2, 3)
@@ -12,8 +18,6 @@
 				.reel('EnemyRight',400, 0, 3, 3)
 				.reel('EnemyLeft', 400, 0, 1, 3)
 				.bind('NewDirection', function(movement) {
-					// console.log('old x', this._oldMovementx, 'old y', this._oldMovementy, 'new', this._movement)
-					// console.log(movement.x != this._oldMovementx || movement.y != this._oldMovementy)
 					if (movement.x != this._oldMovementx || movement.y != this._oldMovementy) {
 						if (movement.y == -1) {
 							this.animate('EnemyUp', -1);
@@ -78,9 +82,6 @@
 
 		createRandomTarget: function() {
 			var negPos = [-1, 1];
-			// var xmin = this.x + 25 * negPos[Math.round(Crafty.math.randomNumber(1,2))]
-			// var xmin = this.x + 25 * negPos[Math.round(Crafty.math.randomNumber(1,2))]
-			// var ymin = this.y + 25 * negPos[Math.round(Crafty.math.randomNumber(1,2))]
             var x = Math.round(Crafty.math.randomNumber(this.x - 200, this.x + 200));
             var y = Math.round(Crafty.math.randomNumber(this.y - 200, this.y + 200));
 

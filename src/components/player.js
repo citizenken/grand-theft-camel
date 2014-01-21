@@ -32,7 +32,7 @@
 					this.stopMovement(data)
 				})
 				.bind('Moved', function() {
-					// Game.enemy.targetLocation = {x:this.x, y:this.y};
+					Game.playerLocation = {x:this.x, y:this.y};
 				})
 				var animationSpeed = 16;
 				this.bind('NewDirection', function(data) {

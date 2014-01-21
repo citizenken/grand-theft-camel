@@ -38,7 +38,6 @@ Crafty.scene('Game', function() {
 
 	// Generate up to five villages on the map in random locations
 	var max_camels = Math.round(Crafty.math.randomNumber(0, 5));
-	console.log(max_camels)
 	this.camels = Array();
 	var camelCount = 0;
 	for (var x = 0; x < Game.map_grid.width; x++) {
@@ -58,6 +57,7 @@ Crafty.scene('Game', function() {
 		var enemy_y = Math.round(Crafty.math.randomNumber(1, 18));
 		if (!this.occupied[enemy_x][enemy_y]) {
 			this.enemy = Crafty.e('Enemy').at(enemy_x, enemy_y);
+			Game.enemies.push(this.enemy);
 			break;
 		} else {
 			i++
