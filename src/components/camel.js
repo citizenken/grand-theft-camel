@@ -41,7 +41,7 @@
 						} else {
 							this.pauseAnimation()
 						}
-					}	
+					}
 				})
 		},
 
@@ -92,7 +92,7 @@
 				var LeadCamel = this._parent;
 				this.z = LeadCamel.z - 5;
 				var followersIndex = LeadCamel.followers.indexOf(this);
-				switch (LeadCamel.attr.direction)
+				switch (LeadCamel._direction)
 					{
 						case 'UP':
 								this.x = LeadCamel.x;

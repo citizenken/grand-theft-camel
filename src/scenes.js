@@ -85,6 +85,7 @@ Crafty.scene('Loading', function(){
 	'assets/actors/camel.png',
 	'assets/actors/player_character.png',
 	'assets/actors/lead_camel_white.png',
+	'assets/actors/human_sword.png',
 	], function(){
 	// Once the images are loaded...
 
@@ -97,6 +98,10 @@ Crafty.scene('Loading', function(){
 	Crafty.sprite(32, 32, 'assets/actors/player_character.png', {
 		spr_white_player:  [1, 0, 0, 0],
 		spr_blue_enemy:  [1, 6, 0, 0],
+	});
+
+	Crafty.sprite(34, 32, 'assets/actors/human_sword.png', {
+		spr_white_player_sword:  [3, 0, 0, 0],
 	});
 
 	Crafty.sprite(32, 40, 'assets/actors/lead_camel_white.png', {

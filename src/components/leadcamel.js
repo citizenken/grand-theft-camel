@@ -1,5 +1,6 @@
 	// This is the player-controlled character
 	Crafty.c('LeadCamel', {
+		_direction: null,
 		currentDir: null,
 		previousDir: null,
 		followers: Array(),
@@ -44,7 +45,7 @@
 				this.bind('NewDirection', function(data) {
 						var followerArray = this.followers;
 						if (data.y == -2) {
-							this.attr.direction = 'UP';
+							this._direction = 'UP';
 							this.animate('LeadCamelMovingUp', -1)
 							if (followerArray.length > 0) {
 								for (var i = 0; i < followerArray.length; i++) {
@@ -52,9 +53,9 @@
 								}
 							}
 						} else if (data.y == 2) {
-							this.attr.direction = 'DOWN';
+							this._direction = 'DOWN';
 						} else if (data.x == 2) {
-							this.attr.direction = 'RIGHT';
+							this._direction = 'RIGHT';
 							this.animate('LeadCamelMovingRight', -1)
 							if (followerArray.length > 0) {
 								for (var i = 0; i < followerArray.length; i++) {
@@ -62,7 +63,7 @@
 								}
 							}
 						} else if (data.x == -2) {
-							this.attr.direction = 'LEFT';
+							this._direction = 'LEFT';
 							this.animate('LeadCamelMovingLeft', -1)
 							if (followerArray.length > 0) {
 								for (var i = 0; i < followerArray.length; i++) {
@@ -101,7 +102,7 @@
 			this.detach();
 			this.followers = Array();
 			var newPlayer = Crafty.e('Player');
-			switch (this.attr.direction)
+			switch (this._direction)
 			{
 				case 'UP':
 					newPlayer.x = this.x + Game.map_grid.tile.width;
@@ -154,7 +155,7 @@
 					var y = (i == 0) ? oldLocation.y: followerArray[i - 1].previousLocation.y;
 					var followerExtraSpace = (i == 0) ? 0 : 4;
 
-					switch (this.attr.direction)
+					switch (this._direction)
 					{
 						case 'UP':
 								followerArray[i].x = x;
