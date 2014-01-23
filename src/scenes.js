@@ -10,9 +10,11 @@ Crafty.scene('Game', function() {
 	//console.log(this.occupied);
 
 	// Player character, placed at 5, 5 on our grid
-	this.player = Crafty.e('Player').at(5, 5);
+	this.player = Crafty.e('WhiteCharacter, Player').at(5, 5);
 	// this.follower = Crafty.e('Camel');
 	Game.player = this.player;
+	Crafty.viewport.centerOn(Game.player)
+	Crafty.viewport.follow(Game.player)
 	this.occupied[this.player.at().x][this.player.at().y] = true;
 
 	// Crafty.viewport.follow(this.player, -100, -100);

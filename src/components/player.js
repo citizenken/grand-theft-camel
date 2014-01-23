@@ -1,7 +1,14 @@
 	Crafty.c('Player', {
+		init: function() {}
+	})
+
+	Crafty.c('WhiteCharacter', {
 		_direction: null,
 		_weapons: ['sword'],
 		_selected_weapon: null,
+		_previousLocation: null,
+		_currentLocation: null,
+		_nextLocation: null,
 		init: function() {
 			this.requires('Actor, Fourway, Collision, SpriteAnimation, Solid, spr_white_player')
 				.fourway(1)
@@ -27,7 +34,7 @@
 						case Crafty.keys['/']:
 							Game.playerKeys['/'] = true;
 							this.changeWeapon();
-							break;	
+							break;
 					}
 				})
 				.bind('KeyUp', function(e) {
@@ -45,6 +52,7 @@
 					}
 				})
 				.bind('AnimationEnd', function(data) {
+					console.log(data);
 					if (data.id == 'PlayerSwordRight' || data.id == 'PlayerSwordLeft') {
 						switch (this._direction)
 						{
@@ -56,7 +64,9 @@
 									this.animate('PlayerLeft', -1)
 								break;
 							case 'RIGHT':
-									this.animate('PlayerRight', -1)
+									// this.animate('PlayerRight', -1);
+									this.resumeAnimation();
+									// console.log(this._currentReel);
 								break;
 						}
 					}
@@ -66,8 +76,10 @@
 						this.collisionHandler(data);
 					}
 				})
-				.bind('Moved', function() {
-					Game.playerLocation = {x:this.x, y:this.y};
+				.bind('Moved', function(data) {
+					this._previousLocation = data;
+					this._currentLocation = {x:this.x, y:this.y};
+					this._nextLocation = {x:this.x + this._movement.x, y:this.y + this._movement.y};
 				})
 				var animationSpeed = 16;
 				this.bind('NewDirection', function(data) {
@@ -113,10 +125,13 @@
 		mount: function(data) {
 			var camel = data[0].obj;
 			camel.destroy();
-			var leadCamel = Crafty.e('LeadCamel');
+			var leadCamel = Crafty.e('LeadCamel, Player');
 			leadCamel.followers = Array();
 			leadCamel.x = this.x;
 			leadCamel.y = this.y;
+			Game.player = leadCamel;
+			Crafty.viewport.centerOn(Game.player)
+			Crafty.viewport.follow(Game.player)
 			switch (this._direction)
 			{
 				case 'UP':

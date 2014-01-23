@@ -3,6 +3,9 @@
 		_direction: null,
 		currentDir: null,
 		previousDir: null,
+		_previousLocation: null,
+		_currentLocation: null,
+		_nextLocation: null,
 		followers: Array(),
 		//keyMonitor: {'UP_ARROW': false,'DOWN_ARROW': false,'LEFT_ARROW': false,'RIGHT_ARROW': false},
 		init: function() {
@@ -10,6 +13,10 @@
 				.fourway(2)
 				.attr({steps:0, direction:null})
 				.bind('Moved', function(oldLocation) {
+					this._previousLocation = oldLocation;
+					this._currentLocation = {x:this.x, y:this.y};
+					this._nextLocation = {x:this.x + this._movement.x, y:this.y + this._movement.y};
+					console.log(Game.player)
 					this.steps++
 					if ((this.steps % (Game.map_grid.tile.width/2) === 0) && this.followers.length > 0) {
 						this.arrangeFollowers(oldLocation)

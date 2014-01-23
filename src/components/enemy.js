@@ -4,7 +4,7 @@
 				.attr({steps:0, direction:null, maxSteps:0, aggroDistance:200, targetLocation: {x:null, y:null}});
 				this._speed = 1;
 				this.bind('EnterFrame', function() {
-					var player = Game.playerLocation;
+					var player = Game.player._currentLocation;
 					if (player) {
 						var distanceToPlayer = Crafty.math.distance(player.x, player.y, this.x, this.y);
 						if (distanceToPlayer < this.aggroDistance) {
@@ -40,6 +40,7 @@
 						}
 					}
 				})
+				// .debugStroke('red')
 				.onHit('Scenery', function(data) {
 					if (this.has('TargetMovement')) {
 						this.changeDirection();
