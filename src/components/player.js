@@ -1,14 +1,14 @@
 	Crafty.c('Player', {
-		init: function() {}
-	})
-
-	Crafty.c('WhiteCharacter', {
 		_direction: null,
 		_weapons: ['sword'],
 		_selected_weapon: null,
 		_previousLocation: null,
 		_currentLocation: null,
 		_nextLocation: null,
+		_hitPoint: 5,
+	})
+
+	Crafty.c('WhiteCharacter', {
 		init: function() {
 			this.requires('Actor, Fourway, Collision, SpriteAnimation, Solid, spr_white_player')
 				.fourway(1)
@@ -102,7 +102,8 @@
 		},
 
 		collisionHandler: function(data) {
-			if (data[0].obj.has('Scenery') ) {
+			var hitObject = data[0].obj
+			if (hitObject.has('Scenery') ) {
 				if (this.steps > 0) {
 					this.steps = 0;
 				}
@@ -113,9 +114,9 @@
 				}
 			}
 
-			if (Game.playerKeys['U'] && !data[0].obj.has('Scenery')) {
-				data[0].obj.destroy();
-			} else if (Game.playerKeys['M'] && data[0].obj.has('Camel')) {
+			if (Game.playerKeys['U'] && !hitObject.has('Scenery')) {
+				hitObject._hitPoint -= 1;
+			} else if (Game.playerKeys['M'] && hitObject.has('Camel')) {
 				this.mount(data);
 			}
 

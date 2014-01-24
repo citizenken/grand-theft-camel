@@ -1,24 +1,17 @@
 	// This is the player-controlled character
 	Crafty.c('LeadCamel', {
-		_direction: null,
-		currentDir: null,
-		previousDir: null,
-		_previousLocation: null,
-		_currentLocation: null,
-		_nextLocation: null,
-		followers: Array(),
+		_followers: Array(),
+		_steps: 0,
 		//keyMonitor: {'UP_ARROW': false,'DOWN_ARROW': false,'LEFT_ARROW': false,'RIGHT_ARROW': false},
 		init: function() {
 			this.requires('Actor, Fourway, Collision, SpriteAnimation, spr_lead_camel_white')
 				.fourway(2)
-				.attr({steps:0, direction:null})
 				.bind('Moved', function(oldLocation) {
 					this._previousLocation = oldLocation;
 					this._currentLocation = {x:this.x, y:this.y};
 					this._nextLocation = {x:this.x + this._movement.x, y:this.y + this._movement.y};
-					console.log(Game.player)
-					this.steps++
-					if ((this.steps % (Game.map_grid.tile.width/2) === 0) && this.followers.length > 0) {
+					this._steps++
+					if ((this._steps % (Game.map_grid.tile.width/2) === 0) && this._followers.length > 0) {
 						this.arrangeFollowers(oldLocation)
 					}
 				})
@@ -50,7 +43,7 @@
 				.reel('LeadCamelMovingLeft', 400, 0, 0, 11);
 				var animationSpeed = 20;
 				this.bind('NewDirection', function(data) {
-						var followerArray = this.followers;
+						var followerArray = this._followers;
 						if (data.y == -2) {
 							this._direction = 'UP';
 							this.animate('LeadCamelMovingUp', -1)
@@ -90,8 +83,8 @@
 
 		// Stops the movement
 		stopMovement: function(data) {
-			if (this.steps > 0) {
-				this.steps = 0;
+			if (this._steps > 0) {
+				this._steps = 0;
 			}
 			this._speed = 0;
 			if (this._movement) {
@@ -101,14 +94,17 @@
 		},
 
 		dismount: function() {
-			for (var i = 0; i < this.followers.length ; i++) {
-				this.followers[i].addComponent('Solid');
-				this.followers[i].addComponent('TargetMovement')
+			for (var i = 0; i < this._followers.length ; i++) {
+				this._followers[i].addComponent('Solid');
+				this._followers[i].addComponent('TargetMovement')
 				// this.followerArray[i].pauseAnimation();
 			}
 			this.detach();
-			this.followers = Array();
-			var newPlayer = Crafty.e('Player');
+			this._followers = Array();
+			var newPlayer = Crafty.e('WhiteCharacter, Player');
+			Game.player = newPlayer;
+			Crafty.viewport.centerOn(Game.player)
+			Crafty.viewport.follow(Game.player)			
 			switch (this._direction)
 			{
 				case 'UP':
@@ -137,19 +133,19 @@
 
 		addFollower: function(data) {
 			var follower = data[0].obj;
-			var followerArray = this.followers;
+			var followerArray = this._followers;
 
 			follower.removeComponent('TargetMovement', false);
 			follower.unbind('Moved');
 			follower.removeComponent('Solid');
 			follower.addComponent('Follower');
 			this.attach(follower);
-			this.followers.push(follower);
+			this._followers.push(follower);
 			this.trigger('NewDirection', this._movement);
 		},
 
 		arrangeFollowers: function(oldLocation) {
-			var followerArray = this.followers;
+			var followerArray = this._followers;
 
 			if (followerArray.length > 0) {
 				for (var i = 0; i < followerArray.length; i++) {

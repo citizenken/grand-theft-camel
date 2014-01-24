@@ -1,17 +1,22 @@
 	Crafty.c('Enemy', {
+		_hitPoints: 2,
 		init: function() {
 			this.requires('Actor, Fourway, Collision, SpriteAnimation, spr_blue_enemy, TargetMovement')
 				.attr({steps:0, direction:null, maxSteps:0, aggroDistance:200, targetLocation: {x:null, y:null}});
 				this._speed = 1;
 				this.bind('EnterFrame', function() {
-					var player = Game.player._currentLocation;
-					if (player) {
-						var distanceToPlayer = Crafty.math.distance(player.x, player.y, this.x, this.y);
-						if (distanceToPlayer < this.aggroDistance) {
-								this.targetLocation = {x:player.x, y:player.y};
+					if (this._hitPoints !== 0) {	
+						var player = Game.player._currentLocation;
+						if (player) {
+							var distanceToPlayer = Crafty.math.distance(player.x, player.y, this.x, this.y);
+							if (distanceToPlayer < this.aggroDistance) {
+									this.targetLocation = {x:player.x, y:player.y};
+							}
 						}
+						this.trigger('Moved');
+					} else {
+						this.destroy();
 					}
-					this.trigger('Moved');
 				})
 				.reel('EnemyUp', 400, 0, 4, 3)
 				.reel('EnemyDown', 400, 0, 6, 3)
