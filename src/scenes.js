@@ -54,7 +54,7 @@ Crafty.scene('Game', function() {
 	}
 
 //create enemies
-	for (var i = 0; i < 4;) {
+	for (var i = 0; i < 10;) {
 		var enemy_x = Math.round(Crafty.math.randomNumber(1, 37));
 		var enemy_y = Math.round(Crafty.math.randomNumber(1, 18));
 		if (!this.occupied[enemy_x][enemy_y]) {

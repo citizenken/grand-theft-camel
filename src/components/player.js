@@ -5,12 +5,12 @@
 		_previousLocation: null,
 		_currentLocation: null,
 		_nextLocation: null,
-		_hitPoint: 5,
+		_hitPoints: 5,
 	})
 
 	Crafty.c('WhiteCharacter', {
 		init: function() {
-			this.requires('Actor, Fourway, Collision, SpriteAnimation, Solid, spr_white_player')
+			this.requires('Actor, Fourway, Collision, FPS, SpriteAnimation, WiredHitBox, Solid, spr_white_player')
 				.fourway(1)
 				.reel('PlayerUp', 400, 0, 2, 3)
 				.reel('PlayerDown', 400, 0, 0, 3)
@@ -18,6 +18,10 @@
 				.reel('PlayerLeft', 400, 0, 1, 3)
 				.reel('PlayerSwordRight',200, 0, 9, 5)
 				.reel('PlayerSwordLeft', 200, 0, 8, 5)
+				.bind('EnterFrame', function(data) {
+					// console.log(data);
+					this.checkDead();
+				})
 				.bind('KeyDown', function(e) {
 					switch (e.key)
 					{
@@ -25,7 +29,7 @@
 							Game.playerKeys['M'] = true;
 							break;
 						case Crafty.keys['R']:
-							this.fourway(2);
+							this.fourway(4);
 							break;
 						case Crafty.keys['U']:
 							Game.playerKeys['U'] = true;
@@ -52,7 +56,6 @@
 					}
 				})
 				.bind('AnimationEnd', function(data) {
-					console.log(data);
 					if (data.id == 'PlayerSwordRight' || data.id == 'PlayerSwordLeft') {
 						switch (this._direction)
 						{
@@ -114,9 +117,7 @@
 				}
 			}
 
-			if (Game.playerKeys['U'] && !hitObject.has('Scenery')) {
-				hitObject._hitPoint -= 1;
-			} else if (Game.playerKeys['M'] && hitObject.has('Camel')) {
+			if (Game.playerKeys['M'] && hitObject.has('Camel')) {
 				this.mount(data);
 			}
 
@@ -165,5 +166,9 @@
 							this.animate('PlayerSwordRight', 1);
 						break;
 				}
+			if (this.hit('Actor')) {
+				var actor = this.hit('Actor')[0].obj;
+				actor._hitPoints -= 1;
+			}
 		}
 	})

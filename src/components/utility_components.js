@@ -6,7 +6,18 @@
 				this._movement = {x:null, y:null};
 				this._movementOld = {}
 				this.bind('EnterFrame',	function() {
-					this.trigger('Moved')
+					if (this.targetLocation.x == null) {
+						this.targetLocation = this.createRandomTarget()
+					}
+
+					var target = this.targetLocation
+					var distanceToTarget = Crafty.math.distance(this.x, this.y, target.x, target.y);
+					if (distanceToTarget == 0 || distanceToTarget == 1 || this._maxSteps == 0) {
+						this.changeDirection();
+					} else {
+						this.trigger('Moved');
+					}
+
 				})
 				.bind('Moved', function(data) {
 					this.move();
@@ -22,15 +33,16 @@
 		},
 
 		move: function() {
-			if (this.targetLocation.x == null) {
+/*			if (this.targetLocation.x == null) {
 				this.targetLocation = this.createRandomTarget()
 			}
 
 			var target = this.targetLocation
 			var distanceToTarget = Crafty.math.distance(this.x, this.y, target.x, target.y);
 			if (distanceToTarget == 0 || distanceToTarget == 1 || this.attr.maxSteps == 0) {
-				this.changeDirection();
-			} else {
+				this.changeDirection();*/
+			// } else {
+				var target = this.targetLocation
 				this.oldLocation = {x:this.x, y:this.y};
 
 				this.diffx = this.x - target.x;
@@ -55,12 +67,11 @@
 				this.y += Math.round((Math.sin(this._angle) * this._speed) * dirmody);
 
 				this._movement.x = this.x - this.oldLocation.x;
-				this._movement.y = this.y - this.oldLocation.y; 
+				this._movement.y = this.y - this.oldLocation.y;
+				this._maxSteps -= 1;
 
 				this.trigger('NewDirection', this._movement);
-
-
-			}
+			// }
 
 		},
 

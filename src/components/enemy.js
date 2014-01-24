@@ -1,22 +1,15 @@
 	Crafty.c('Enemy', {
 		_hitPoints: 2,
+		_maxSteps: 0,
 		init: function() {
-			this.requires('Actor, Fourway, Collision, SpriteAnimation, spr_blue_enemy, TargetMovement')
-				.attr({steps:0, direction:null, maxSteps:0, aggroDistance:200, targetLocation: {x:null, y:null}});
+			this.requires('Actor, Fourway, Collision, SpriteAnimation, WiredHitBox, spr_blue_enemy, TargetMovement')
+				.attr({steps:0, direction:null, aggroDistance:200, targetLocation: {x:null, y:null}});
 				this._speed = 1;
-				this.bind('EnterFrame', function() {
-					if (this._hitPoints !== 0) {	
-						var player = Game.player._currentLocation;
-						if (player) {
-							var distanceToPlayer = Crafty.math.distance(player.x, player.y, this.x, this.y);
-							if (distanceToPlayer < this.aggroDistance) {
-									this.targetLocation = {x:player.x, y:player.y};
-							}
-						}
-						this.trigger('Moved');
-					} else {
-						this.destroy();
-					}
+				this.generateMaxSteps();
+				this.bind('EnterFrame', function(data) {
+					this.checkDead();
+					var player = Game.player._currentLocation;
+					this.nearPlayer(player);
 				})
 				.reel('EnemyUp', 400, 0, 4, 3)
 				.reel('EnemyDown', 400, 0, 6, 3)
@@ -53,6 +46,34 @@
 				})
 		},
 
+		nearPlayer: function (player, data) {
+			if (player) {
+				var distanceToPlayer = Crafty.math.distance(player.x, player.y, this.x, this.y);
+				//Size of one square, within attack range
+				if (this.hit('Player')) {
+					var player = this.hit('Player')[0].obj;
+					this.attackTarget(player);
+				} else if (distanceToPlayer < this.aggroDistance) {
+					this.targetLocation = {x:player.x, y:player.y};
+					return true;
+				}
+			}
+		},
+
+		attackTarget: function(player) {
+			this._speed = 0;
+			if (this._movement) {
+			  this.x -= this._movement.x;
+			  this.y -= this._movement.y;
+			}
+			for (var i = player._hitPoints; i > 0; i--) {
+			this.delay(function() {
+					player._hitPoints -= 1;
+					console.log(player._hitPoints);
+			}, 400, -1);
+			};
+		},
+
 		// Stops the movement
 		stopMovement: function(data) {
 			if (this.steps > 0) {
@@ -70,7 +91,7 @@
 		},
 
 		generateMaxSteps: function() {
-			this.attr.maxSteps = Math.round(Crafty.math.randomNumber(50, 150));
+			this._maxSteps = Math.round(Crafty.math.randomNumber(50, 150));
 		},
 
 		changeDirection: function() {

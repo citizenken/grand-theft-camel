@@ -2,6 +2,7 @@
 	Crafty.c('LeadCamel', {
 		_followers: Array(),
 		_steps: 0,
+		_hitPoints: 1,
 		//keyMonitor: {'UP_ARROW': false,'DOWN_ARROW': false,'LEFT_ARROW': false,'RIGHT_ARROW': false},
 		init: function() {
 			this.requires('Actor, Fourway, Collision, SpriteAnimation, spr_lead_camel_white')
@@ -104,7 +105,7 @@
 			var newPlayer = Crafty.e('WhiteCharacter, Player');
 			Game.player = newPlayer;
 			Crafty.viewport.centerOn(Game.player)
-			Crafty.viewport.follow(Game.player)			
+			Crafty.viewport.follow(Game.player)
 			switch (this._direction)
 			{
 				case 'UP':
