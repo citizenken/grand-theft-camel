@@ -1,8 +1,8 @@
 Game = {
 	//This defines our grid's size and the size of each tile
 	map_grid: {
-		width: Math.floor(window.innerWidth/32),
-		height: Math.floor(window.innerHeight/32),
+		width: 50,
+		height: 64,
 		tile: {
 			width: 32,
 			height: 32,
@@ -29,7 +29,7 @@ Game = {
 	start: function() {
 		//Start crafty and set background color
 		Crafty.init(Game.width(), Game.height());
-		Crafty.viewport.init(400,400);
+		// Crafty.viewport.init(200,200);
 		Crafty.background('tan');
 		playerKeys = [];
 		playerKeys['M'] = false;

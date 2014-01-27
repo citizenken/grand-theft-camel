@@ -64,6 +64,13 @@
 	},
 	});
 
+	Crafty.c('Gate', {
+	init: function() {
+	this.requires('Scenery')
+	  .color('black');
+	},
+	});
+
 	// A Bush is just an Actor with a certain color
 	Crafty.c('Bush', {
 	init: function() {

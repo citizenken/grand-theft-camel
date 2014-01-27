@@ -24,10 +24,11 @@ module.exports = function(grunt) {
         files: {
           'lib/grand-theft-camel.js': [
             'lib/crafty.js',
-            'src/game.js',
+            //'src/game.js',
             /*'src/components.js',*/
-            'src/scenes.js',
-            'src/components/**/*.js'
+            //'src/scenes.js',
+            //'src/components/**/*.js',
+            'src/**/*.js'
           ]
         }
       }
