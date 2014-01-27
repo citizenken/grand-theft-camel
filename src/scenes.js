@@ -13,8 +13,8 @@ Crafty.scene('Game', function() {
 	this.player = Crafty.e('WhiteCharacter, Player').at(5, 5);
 	// this.follower = Crafty.e('Camel');
 	Game.player = this.player;
-	// Crafty.viewport.centerOn(Game.player)
-	// Crafty.viewport.follow(Game.player)
+	Crafty.viewport.centerOn(Game.player)
+	Crafty.viewport.follow(Game.player)
 	this.occupied[this.player.at().x][this.player.at().y] = true;
 
 	// Crafty.viewport.follow(this.player, -100, -100);
@@ -38,7 +38,7 @@ Crafty.scene('Game', function() {
 		}
 	}
 
-	// Generate up to five villages on the map in random locations
+	// Generate up to 6 camels on the map in random locations
 	var max_camels = Math.round(Crafty.math.randomNumber(0, 5));
 	this.camels = Array();
 	var camelCount = 0;
@@ -98,12 +98,11 @@ Crafty.scene('Loading', function(){
 	  });
 
 	Crafty.sprite(32, 32, 'assets/actors/player_character.png', {
-		spr_white_player:  [1, 0, 0, 0],
-		spr_blue_enemy:  [1, 6, 0, 0],
+		spr_white_player:  [1, 0, 0, 0]
 	});
 
-	Crafty.sprite(34, 32, 'assets/actors/human_sword.png', {
-		spr_white_player_sword:  [3, 0, 0, 0],
+	Crafty.sprite(32, 32, 'assets/actors/blue_character.png', {
+		spr_blue_player:  [1, 2, 0, 0]
 	});
 
 	Crafty.sprite(32, 40, 'assets/actors/lead_camel_white.png', {

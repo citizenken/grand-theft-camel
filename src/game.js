@@ -29,7 +29,7 @@ Game = {
 	start: function() {
 		//Start crafty and set background color
 		Crafty.init(Game.width(), Game.height());
-		// Crafty.viewport.init(400,400);
+		Crafty.viewport.init(400,400);
 		Crafty.background('tan');
 		playerKeys = [];
 		playerKeys['M'] = false;

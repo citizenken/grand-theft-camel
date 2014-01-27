@@ -2,7 +2,7 @@
 		_hitPoints: 2,
 		_maxSteps: 0,
 		init: function() {
-			this.requires('Actor, Fourway, Collision, SpriteAnimation, WiredHitBox, spr_blue_enemy, TargetMovement')
+			this.requires('Actor, Fourway, Collision, SpriteAnimation, WiredHitBox, spr_blue_player, TargetMovement')
 				.attr({steps:0, direction:null, aggroDistance:200, targetLocation: {x:null, y:null}});
 				this._speed = 1;
 				this.generateMaxSteps();
@@ -11,10 +11,10 @@
 					var player = Game.player._currentLocation;
 					this.nearPlayer(player);
 				})
-				.reel('EnemyUp', 400, 0, 4, 3)
-				.reel('EnemyDown', 400, 0, 6, 3)
-				.reel('EnemyRight',400, 0, 5, 3)
-				.reel('EnemyLeft', 400, 0, 7, 3)
+				.reel('EnemyUp', 400, 0, 0, 3)
+				.reel('EnemyDown', 400, 0, 2, 3)
+				.reel('EnemyRight',400, 0, 1, 3)
+				.reel('EnemyLeft', 400, 0, 3, 3)
 				.bind('NewDirection', function(movement) {
 					if (movement.x != this._oldMovementx || movement.y != this._oldMovementy) {
 						if (movement.y == -1) {
@@ -39,6 +39,12 @@
 					}
 				})
 				// .debugStroke('red')
+				.onHit('Player', function(data) {
+					this.attackTarget(data[0].obj)
+
+				}, function(){
+					this._speed = 1;
+				})
 				.onHit('Scenery', function(data) {
 					if (this.has('TargetMovement')) {
 						this.changeDirection();
@@ -50,10 +56,7 @@
 			if (player) {
 				var distanceToPlayer = Crafty.math.distance(player.x, player.y, this.x, this.y);
 				//Size of one square, within attack range
-				if (this.hit('Player')) {
-					var player = this.hit('Player')[0].obj;
-					this.attackTarget(player);
-				} else if (distanceToPlayer < this.aggroDistance) {
+				if (distanceToPlayer < this.aggroDistance) {
 					this.targetLocation = {x:player.x, y:player.y};
 					return true;
 				}
@@ -66,12 +69,11 @@
 			  this.x -= this._movement.x;
 			  this.y -= this._movement.y;
 			}
-			for (var i = player._hitPoints; i > 0; i--) {
-			this.delay(function() {
-					player._hitPoints -= 1;
-					console.log(player._hitPoints);
-			}, 400, -1);
-			};
+			if (player._hitPoints > 0) {
+				// player._hitPoints -= 1;
+			} else {
+				this.changeDirection();
+			}
 		},
 
 		// Stops the movement

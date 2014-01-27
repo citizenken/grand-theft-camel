@@ -2,6 +2,14 @@
 	//  on a grid of tiles
 	Crafty.c('Grid', {
 	init: function() {
+		this.bind('KeyDown', function(e) {
+			if (e.key == Crafty.keys['ESC']) {
+				Crafty.pause();
+			}
+		})
+		this.bind('Pause', function() {
+			// Crafty.e('PauseBox').draw();
+		})
 		this.attr({
 			w: Game.map_grid.tile.width,
 			h: Game.map_grid.tile.height
@@ -19,6 +27,14 @@
 	}
 	});
 
+	Crafty.c('PauseBox', {
+		init: function() {
+			this.requires('2D, DOM, text, Color');
+			this.attr({x:(Game.map_grid.width/2), y:(Game.map_grid.height/2), w:200, h:200, z:50});
+			this.color('black');
+		},
+	});
+
 	// An "Actor" is an entity that is drawn in 2D on canvas
 	//  via our logical coordinate grid
 	Crafty.c('Actor', {
@@ -29,6 +45,7 @@
 			if (this._hitPoints === 0) {
 				this.destroy();
 			}
+			return false;
 		}
 	});
 

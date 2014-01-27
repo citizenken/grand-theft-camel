@@ -16,8 +16,9 @@
 				.reel('PlayerDown', 400, 0, 0, 3)
 				.reel('PlayerRight',400, 0, 3, 3)
 				.reel('PlayerLeft', 400, 0, 1, 3)
-				.reel('PlayerSwordRight',200, 0, 9, 5)
-				.reel('PlayerSwordLeft', 200, 0, 8, 5)
+				.reel('PlayerSwordRight',200, 0, 5, 5)
+				.reel('PlayerSwordLeft', 200, 0, 4, 5)
+				.reel('PlayerSwordDown', 200, 0, 6, 5)
 				.bind('EnterFrame', function(data) {
 					// console.log(data);
 					this.checkDead();
@@ -158,6 +159,7 @@
 					case 'UP':
 						break;
 					case 'DOWN':
+							this.animate('PlayerSwordDown', 1);
 						break;
 					case 'LEFT':
 							this.animate('PlayerSwordLeft', 1);

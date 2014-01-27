@@ -6,7 +6,7 @@
 			this.requires('Solid, Actor, Fourway, SpriteAnimation, Collision, spr_camel, TargetMovement')
 				.attr({steps:0, direction:null, targetLocation:{x:0, y:0}});
 				this.generateMaxSteps();
-				this._speed = Math.round(Crafty.math.randomNumber(0.5, 2.5));
+				this._speed = Math.round(Crafty.math.randomNumber(0.5, 2));
 				this._oldMovementx;
 				this._oldMovementy;
 				this.reel('CamelMovingUp', 400, 0, 9, 3)
