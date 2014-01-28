@@ -5,6 +5,7 @@ Crafty.scene('RandomCamp', function() {
 	var areaHeight = randomBetween(20, 30);
 	var campWidth = areaWidth - 3;
 	var campHeight = areaHeight - 3;
+	
 	Game.map_grid.width = areaWidth;
 	Game.map_grid.height = areaHeight;
 	Crafty.init(Game.width(), Game.height());
@@ -18,18 +19,29 @@ Crafty.scene('RandomCamp', function() {
 		}
 	}
 
-	var playerStartX1 = randomBetween(0, 3);
-	var playerStartY1 = randomBetween(0, areaHeight);
-	var playerStartX2 = randomBetween(0, areaWidth);
-	var playerStartY2 = randomBetween(0, 3);
-	var playerStartX3 = randomBetween(campWidth, areaWidth);
-	var playerStartY3 = randomBetween(0, areaHeight);
-	var playerStartX4 = randomBetween(campWidth, areaWidth);
-	var playerStartY5 = randomBetween(campHeight, areaHeight);
+
+	if (Crafty('Player')._direction) {
+		switch (Crafty('Player')._direction)
+		{
+			case 'UP':
+				Crafty('Player').at((areaWidth/2), areaHeight)
+				break;
+			case 'DOWN':
+				Crafty('Player').at((areaWidth/2), 0)
+				break;
+			case 'LEFT':
+				Crafty('Player').at(areaWidth, (areaHeight/2))
+				break;
+			case 'RIGHT':
+				Crafty('Player').at(0, (areaHeight/2))
+				break;
+		}
+	}
+
 	// Player character, placed at 5, 5 on our grid
-	this.player = Crafty.e('WhiteCharacter, Player').at(playerStartX, playerStartY);
+	// this.player = Crafty.e('WhiteCharacter, Player').at(playerStartX, playerStartY);
 	// this.follower = Crafty.e('Camel');
-	Game.player = this.player;
+	// Game.player = this.player;
 	// Crafty.viewport.centerOn(Game.player)
 	// Crafty.viewport.follow(Game.player)
 

@@ -10,7 +10,7 @@
 
 	Crafty.c('WhiteCharacter', {
 		init: function() {
-			this.requires('Actor, Fourway, Collision, FPS, SpriteAnimation, WiredHitBox, Solid, spr_white_player')
+			this.requires('Actor, Fourway, Collision, FPS, SpriteAnimation, WiredHitBox, Persist, Solid, spr_white_player')
 				.fourway(1)
 				.reel('PlayerUp', 400, 0, 2, 3)
 				.reel('PlayerDown', 400, 0, 0, 3)

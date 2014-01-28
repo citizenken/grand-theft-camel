@@ -37,6 +37,6 @@ Crafty.scene('Loading', function(){
 	});
 
 	// Now that our sprites are ready to draw, start the game
-	Crafty.scene('RandomCamp');
+	Crafty.scene('Desert');
   })
 });
