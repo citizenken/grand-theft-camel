@@ -29,13 +29,16 @@ module.exports = function(grunt) {
             //'src/scenes.js',
             //'src/components/**/*.js',
             'src/**/*.js'
-          ]
+          ],
+          'lib/map_editor.js': [
+            'lib/crafty.js',
+            'map_editor/src/**/*.js']
         }
       }
     },
     watch: {
       js: {
-        files: 'src/**/*.js',
+        files: ['src/**/*.js', 'map_editor/src/**/*.js'],
         tasks: ['uglify']
       }
     }

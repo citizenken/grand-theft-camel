@@ -1,8 +1,8 @@
-Game = {
+var Game = {
 	//This defines our grid's size and the size of each tile
 	map_grid: {
 		width: 50,
-		height: 64,
+		height: 50,
 		tile: {
 			width: 32,
 			height: 32,
@@ -22,21 +22,21 @@ Game = {
 		return Game.map_grid.height * this.map_grid.tile.height;
 	},
 
-	playerKeys: Array(),
+	playerKeys: [],
 	playerLocation: Object,
-	enemies: Array(),
+	enemies: [],
 	//initialize and start game
 	start: function() {
 		//Start crafty and set background color
 		Crafty.init(Game.width(), Game.height());
 		// Crafty.viewport.init(200,200);
 		Crafty.background('tan');
-		playerKeys = [];
-		playerKeys['M'] = false;
+		Game.playerKeys = [];
+		Game.playerKeys.M = false;
 		Crafty.scene('Loading');
 	}
-}
+};
 
-$text_css = { 'font-size': '24px', 'font-family': 'Arial', 'color': 'white', 'text-align': 'center' }
+var $text_css = { 'font-size': '24px', 'font-family': 'Arial', 'color': 'white', 'text-align': 'center' };
 
 window.addEventListener('load', Game.start);

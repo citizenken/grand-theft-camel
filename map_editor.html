@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+	</script>
+ 	<script src="lib/map_editor.js"></script>
+	<style>
+	#cr-stage {
+		margin-right: auto;
+		margin-left: auto;
+	}
+	/* Z-index of #mask must lower than #boxes .window */
+	#mask {
+	  position:absolute;
+	  z-index:9000;
+	  background-color:#fff;
+	  display:none;
+	}
+	#boxes .window {
+		width:440px;
+		display:none;
+		z-index:9999;
+		padding:20px;
+	}
+	/* Customize your modal window here, you can add background image too */
+	#boxes #dialog {
+	  width:410px;
+	  margin-right: auto;
+	  margin-left: auto;
+	  /*word-wrap: break-word;*/
+	  /*height:203px;*/
+	}
+	</style>
+</head>
+<body>
+	<p  style='text-align:center;'>Welcome to the Grand Theft Camel level editor. Select your entity from the tool box on the right. Press 'P' to toggle paint mode.</p>
+	<p  style='text-align:center;'>Hit 'M' to generate/toggle the map array. Copy this into src/scenes/maps/ for inclusion in the game.</p>
+	<h3 id='paint-mode' style='display:none;text-align:center;'>Paint Mode is enabled. Press 'P' again to disable</h3>
+	<div id="boxes">
+		<!-- #customize your modal window here -->
+		<div id="dialog" class="window">
+
+			<!-- close button is defined as close class -->
+			<a href="#" class="close">Close it</a>
+		</div>
+		<!-- Do not remove div#mask, because you'll need it to fill the whole screen -->
+	 	<div id="mask"></div>
+	</div>
+</body>
+</html>
