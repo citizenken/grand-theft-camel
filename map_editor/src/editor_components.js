@@ -1,21 +1,5 @@
 Crafty.c('Grid', {
 	init: function() {
-		/*this.bind('KeyDown', function(e) {
-			switch (e.key) {
-				case Crafty.keys.P:
-					if (e.key === Crafty.keys.P && !MapEditor.paintMode) {
-						MapEditor.paintMode = true;
-						$('#paint-mode').toggle();
-					} else {
-						MapEditor.paintMode = false;
-						$('#paint-mode').toggle();
-					}
-					break;
-				case Crafty.keys.M:
-					Crafty.scene('PrintMap');
-					break;
-			}
-		});*/
 		this.attr({
 			w: MapEditor.map_grid.tile.width,
 			h: MapEditor.map_grid.tile.height

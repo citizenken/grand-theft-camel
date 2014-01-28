@@ -12,9 +12,9 @@ module.exports = function(grunt) {
     uglify: {
       options: {
         // for production
-        beautify: true, // format the output (de-minifies)
-        compress: false, // minify code
-        mangle: false // minify variable names
+        beautify: false, // format the output (de-minifies)
+        compress: true, // minify code
+        mangle: true // minify variable names
         // for sharing
         // beautify: true, // format the output (de-minifies)
         // compress: false, // minify code

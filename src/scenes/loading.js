@@ -14,7 +14,6 @@ Crafty.scene('Loading', function(){
 	'assets/actors/camel.png',
 	'assets/actors/player_character.png',
 	'assets/actors/lead_camel_white.png',
-	'assets/actors/human_sword.png',
 	], function(){
 	// Once the images are loaded...
 
