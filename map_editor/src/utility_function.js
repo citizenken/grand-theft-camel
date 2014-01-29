@@ -1,8 +1,8 @@
 function initiateMap(map) {
 	if (map) {
-		map = map.replace(/^[\n]+|\.|[\n]+$/g, "");
-		console.log(map)
-		mapArray = map.split(',');
+		// map = map.replace(/^[\n]+|\.|[\n]+$/g, "");
+		// console.log(map)
+		mapArray = map.split(',\n ');
 		convertMap(mapArray);
 		MapEditor.mapToLoad = null;
 	} else {
@@ -34,6 +34,7 @@ function printMap(){
 		var rowString = '\r\n';
 		for (var x = 0; x < width; x++) {
 			var currentEntity = Crafty(i);
+				console.log(currentEntity)
 			if (currentEntity.at().x == x) {
 				rowString += currentEntity._mapChar;
 			}
@@ -77,6 +78,7 @@ function buildMap() {
 	var map = $('#mapToLoad').val();
 	$('#cr-stage').toggle();
 	$('#loadBox').toggle();
+	$('#mapToLoad').toggle();
 	MapEditor.mapToLoad = map;
 	Crafty.scene('EditMap');
 
