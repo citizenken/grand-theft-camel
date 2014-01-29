@@ -56,11 +56,11 @@ Crafty.c('Oasis', {
 		.color('blue')
 		.bind('MouseDown', function(data) {
 			console.log(data);
-			if (data.buttons === 2) {
+			if (data.button === 2) {
 				var deleteEntity = window.confirm('Are you sure you want to delete this entity?');
 				if (deleteEntity) {
-					this.addComponent('Oasis');
-					this.removeComponent('EmptySpace');
+					this.addComponent('EmptySpace');
+					this.removeComponent('Oasis');
 				}
 			}
 		});

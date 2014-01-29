@@ -9,42 +9,40 @@
 		margin-right: auto;
 		margin-left: auto;
 	}
-	/* Z-index of #mask must lower than #boxes .window */
-	#mask {
-	  position:absolute;
-	  z-index:9000;
-	  background-color:#fff;
-	  display:none;
-	}
-	#boxes .window {
-		width:440px;
+	/* Customize your modal window here, you can add background image too */
+	#saveBox {
 		display:none;
 		z-index:9999;
 		padding:20px;
-	}
-	/* Customize your modal window here, you can add background image too */
-	#boxes #dialog {
-	  width:410px;
-	  margin-right: auto;
-	  margin-left: auto;
-	  /*word-wrap: break-word;*/
+		width:410px;
+		margin-right: auto;
+		margin-left: auto;
+		word-wrap: break-word;
 	  /*height:203px;*/
+	}
+	#loadBox, #mapToLoad {
+		display:none;
+		z-index:9999;
+		padding:20px;
+		width:410px;
+		margin-right: auto;
+		margin-left: auto;
+		word-wrap: break-word; 
 	}
 	</style>
 </head>
 <body>
 	<p  style='text-align:center;'>Welcome to the Grand Theft Camel level editor. Select your entity from the tool box on the right. Press 'P' to toggle paint mode.</p>
 	<p  style='text-align:center;'>Hit 'M' to generate/toggle the map array. Copy this into src/scenes/maps/ for inclusion in the game.</p>
+	<div style='margin-left:auto;margin-right:auto;width:150px;'>
+		<input type='button' id='loadmap' value='Load Map' onclick='loadMap()'/>
+		<input type='button' id='savemap' value='Save Map' onclick='printMap()'/>
+	</div></br>
 	<h3 id='paint-mode' style='display:none;text-align:center;'>Paint Mode is enabled. Press 'P' again to disable</h3>
-	<div id="boxes">
-		<!-- #customize your modal window here -->
-		<div id="dialog" class="window">
-
-			<!-- close button is defined as close class -->
-			<a href="#" class="close">Close it</a>
-		</div>
-		<!-- Do not remove div#mask, because you'll need it to fill the whole screen -->
-	 	<div id="mask"></div>
+	<div id="saveBox" class="window"></div>
+	<div id="loadBox" class="window">
+		<textarea id='mapToLoad' rows="30" cols="50"></textarea>
+		<input type='button' id='buildmap' value='Build Map' onclick='buildMap()'/>
 	</div>
 </body>
 </html>

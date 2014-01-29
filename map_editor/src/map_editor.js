@@ -2,7 +2,7 @@ var MapEditor = {
 	//This defines our grid's size and the size of each tile
 	map_grid: {
 		width: 30,
-		height: 30,
+		height: 18,
 		tile: {
 			width: 32,
 			height: 32,

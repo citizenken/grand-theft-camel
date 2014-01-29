@@ -18,15 +18,6 @@ Crafty.scene('EditMap', function(){
 					break;
 			}
 		});
-	var width = MapEditor.map_grid.width;
-	var height = MapEditor.map_grid.height;
-	var entityNumber = 0;
-	var map = [];
-	for (var y = 0; y <= height ; y++) {
-		map[y] = [];
-		for (var x = 0; x <= width; x++) {
-			map[y][x] = Crafty.e('EmptySpace').at(x,y);
-			// emptySpace._entityName = 'EmptySpace_' + entityNumber;
-		}
-	}
+	this._map = MapEditor.mapToLoad;
+	initiateMap(this._map);
 });
