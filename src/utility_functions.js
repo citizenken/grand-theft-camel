@@ -3,10 +3,12 @@ function randomBetween(low, high) {
 }
 
 function convertMap(map, width, height) {
+	console.log(map);
 	var mapArray = [];
 	for (var x = 0; x < map.length; x++) {
 		mapArray[x] = map[x].split("");
 	}
+	console.log(mapArray);
 	parsemap(mapArray)
 }
 
@@ -22,7 +24,7 @@ function parsemap (mapArray) {
 				break;
 				case '@':
 					Game.player = Crafty.e('WhiteCharacter, Player').at(x,y);
-				break;				
+				break;
 				default:
 				break;
 			}

@@ -27,22 +27,34 @@
 		width:410px;
 		margin-right: auto;
 		margin-left: auto;
-		word-wrap: break-word; 
+		word-wrap: break-word;
+	}
+	.selected {
+		border: solid 2px red;
 	}
 	</style>
 </head>
 <body>
-	<p  style='text-align:center;'>Welcome to the Grand Theft Camel level editor. Select your entity from the tool box on the right. Press 'P' to toggle paint mode.</p>
-	<p  style='text-align:center;'>Hit 'M' to generate/toggle the map array. Copy this into src/scenes/maps/ for inclusion in the game.</p>
-	<div style='margin-left:auto;margin-right:auto;width:150px;'>
-		<input type='button' id='loadmap' value='Load Map' onclick='loadMap()'/>
-		<input type='button' id='savemap' value='Save Map' onclick='printMap()'/>
+	<p  style='text-align:center;'>Welcome to the Grand Theft Camel level editor. Select your entity from the tool box on the left. Press 'P' to toggle paint mode.</p>
+	<div style='margin-left:auto;margin-right:auto;width:30%;'>
+		<input type='button' id='loadmap' value='Load Map'/>
+		<input type='button' id='savemap' value='Save Map'/>
+		<input type="button" id="clearmap" style="float:right" value="Clear Map">
 	</div></br>
 	<h3 id='paint-mode' style='display:none;text-align:center;'>Paint Mode is enabled. Press 'P' again to disable</h3>
 	<div id="saveBox" class="window"></div>
 	<div id="loadBox" class="window">
+		<input type='button' id='buildmap' value='Build Map'/>
 		<textarea id='mapToLoad' rows="30" cols="50"></textarea>
-		<input type='button' id='buildmap' value='Build Map' onclick='buildMap()'/>
+	</div>
+	<div id="palette" style="width:100px;height:300px;background-color:#d3d3d3;position:absolute;text-align:center;margin-left:200px;">
+		<span>Entity Palette</span></br></br>
+		<table>
+			<tr>
+				<td><div class="palette-entity" id="TentPalette" title="Tent"></div></td>
+				<td><div class="palette-entity" id="OasisPalette" title="Oasis"></div></td>
+			</tr>
+		</table>
 	</div>
 </body>
 </html>

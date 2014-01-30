@@ -23,7 +23,7 @@ var MapEditor = {
 	},
 
 	paintMode: false,
-	selectedEntity: 'Oasis',
+	selectedEntity: null,
 	//initialize and start MapEditor
 	start: function() {
 		//Start crafty and set background color
