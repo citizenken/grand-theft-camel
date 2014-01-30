@@ -41,7 +41,7 @@ Crafty.c('Grid', {
 
 Crafty.c('Actor', {
 	init: function() {
-		this.requires('2D, Canvas, Grid');
+		this.requires('2D, Canvas, Grid, Collision, WiredHitBox');
 	}
 });
 
@@ -55,7 +55,7 @@ Crafty.c('MapText', {
 Crafty.c('EmptySpace', {
 	_mapChar: '#',
 	init: function () {
-		this.requires('Actor, Mouse, Color, Collision, WiredHitBox')
+		this.requires('Actor, Mouse, Color')
 		.color('tan');
 	}
 });

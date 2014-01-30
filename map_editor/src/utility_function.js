@@ -56,9 +56,11 @@ function initiateMap(map) {
 			}
 		}
 	}
+	// initiatePalette();
 }
 
 function clearMap() {
+	Crafty('*').destroy();
 	var map = [];
 	for (var y = 0; y < height ; y++) {
 		map[y] = [];
@@ -95,7 +97,8 @@ function saveMap(){
 	// var height = MapEditor.map_grid.height;
 	var entityNumber = 0;
 	var map = [];
-	var i = 2;
+	var first = Crafty('EmptySpace, Oasis, Tent');
+	var i = first[0];
 	for (var y = 0; y < height ; y++) {
 		map[y] = [];
 		var rowString = '<br>';
@@ -119,13 +122,16 @@ function buildMap() {
 	$('#cr-stage').toggle();
 	$('#loadBox').toggle();
 	$('#mapToLoad').toggle();
+	$('#savemap').prop('disabled', false);
 	MapEditor.mapToLoad = map;
+	// Crafty('DOM').destroy();
 	Crafty.scene('EditMap');
 
 }
 
 function convertMap(map) {
 	var mapArray = [];
+
 	for (var x = 0; x < map.length; x++) {
 		mapArray[x] = map[x].split('');
 	}
@@ -136,6 +142,7 @@ function parsemap (mapArray) {
 	// var width = MapEditor.map_grid.width;
 	// var height = MapEditor.map_grid.height;
 	var map = [];
+	var i = 2;
 	for (var y = 0; y < height; y++) {
 		map[y] = [];
 		for(var x = 0; x < width; x++) {
@@ -146,6 +153,9 @@ function parsemap (mapArray) {
 				case 'o':
 					map[y][x] = Crafty.e('Oasis').at(x,y);
 				break;
+				case 't':
+					map[y][x] = Crafty.e('Tent').at(x,y);
+				break;
 				case '@':
 					map[y][x] = Game.player = Crafty.e('WhiteCharacter, Player').at(x,y);
 				break;
@@ -153,6 +163,7 @@ function parsemap (mapArray) {
 					map[y][x] = Crafty.e('EmptySpace').at(x,y);
 				break;
 			}
+			i++;
 		}
 	}
 }

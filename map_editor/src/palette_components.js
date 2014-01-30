@@ -15,8 +15,5 @@ Crafty.c('OasisPalette', {
 		.attr({x:32, w:32, h:32})
 		.color('blue');
 		this.DOM(OasisPalette);
-		this.bind('Click', function() {
-			console.log(this);
-		})
 	}
 });

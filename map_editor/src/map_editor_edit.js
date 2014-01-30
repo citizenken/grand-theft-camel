@@ -20,5 +20,5 @@ Crafty.scene('EditMap', function(){
 		});
 	this._map = MapEditor.mapToLoad;
 	initiateMap(this._map);
-	initiatePalette();
+	$('#palette').show();
 });
