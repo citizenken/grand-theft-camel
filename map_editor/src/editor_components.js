@@ -1,11 +1,13 @@
 Crafty.c('Grid', {
 	init: function() {
 		this.requires('Mouse')
-		.bind('MouseOver', function(data) {
-			console.log(data);
-			if (MapEditor.paintMode && MapEditor.selectedEntity) {
-				this.addComponent(MapEditor.selectedEntity);
-				this.removeComponent('EmptySpace');
+		.bind('MouseOver', function() {
+			if (MapEditor.paintMode && MapEditor.selectedEntity !== 'Player') {
+				this.addEntity(this, MapEditor.selectedEntity);
+			} else if (MapEditor.eraseMode && MapEditor.selectedEntity) {
+				if (this.has(MapEditor.selectedEntity)) {
+					this.removeEntity(this, MapEditor.selectedEntity);
+				}
 			} else if (!Crafty.bind('MouseDown')) {
 				Crafty.bind('MouseDown');
 			}
@@ -13,14 +15,12 @@ Crafty.c('Grid', {
 		.bind('MouseDown', function (data) {
 			if (data.button === 0) {
 				if (this.has('EmptySpace') && MapEditor.selectedEntity) {
-					this.toggleComponent(MapEditor.selectedEntity);
-					this.toggleComponent('EmptySpace');
+					this.addEntity(this, MapEditor.selectedEntity);
 				}
 			} else if (data.button === 2) {
-				var selectedEntity = MapEditor.selectedEntity;
-				this.toggleComponent('*');
-				this.toggleComponent('EmptySpace');
-				this.color('tan');
+				if (this.has(MapEditor.selectedEntity)) {
+					this.removeEntity(this, MapEditor.selectedEntity);
+				}
 			}
 		});
 		this.attr({
@@ -29,6 +29,38 @@ Crafty.c('Grid', {
 		});
 	},
 
+	addEntity: function (entity, selectedEntity) {
+		if (selectedEntity !== 'FillBucket') {
+			if (selectedEntity === 'Player' && !MapEditor.playerPlaced) {
+				MapEditor.playerPlaced = true;
+				entity.addComponent(selectedEntity);
+			} else if (selectedEntity === 'Player' && MapEditor.playerPlaced) {
+				window.alert('Player is already placed. Only one is allowed per map');
+			} else if (entity.has('EmptySpace') && selectedEntity) {
+				entity.addComponent(selectedEntity);
+			}
+			entity.removeComponent('EmptySpace');
+		} else {
+			this.fillBucketSelect(entity, selectedEntity);
+		}
+	},
+
+	fillBucketSelect: function(entity, selectedEntity) {
+		entity.addComponent(selectedEntity);
+	},
+
+	removeEntity: function(entity, selectedEntity) {
+		if (selectedEntity === 'Player' && MapEditor.playerPlaced) {
+			MapEditor.playerPlaced = false;
+			entity.removeComponent(selectedEntity);
+		} else {
+			entity.removeComponent(selectedEntity);
+		}
+		if(entity.has('Sprite')) {
+			entity.removeComponent('Sprite');
+		}
+		entity.addComponent('EmptySpace');
+	},
 	// Locate this entity at the given position on the grid
 	at: function(x, y) {
 		if (x === undefined && y === undefined) {
@@ -88,7 +120,7 @@ Crafty.c('Mountain', {
 Crafty.c('Well', {
 	_mapChar: 'w',
 	init: function () {
-		this.requires('Actor, Mouse, Color, spr_uncovered_well_32')
+		this.requires('Actor, Mouse, spr_uncovered_well_32')
 		// .color('#BFEFFF')
 	}
 });
@@ -97,5 +129,13 @@ Crafty.c('Player', {
 	_mapChar: '@',
 	init: function () {
 		this.requires('Actor, Mouse, spr_white_player')
+	}
+});
+
+Crafty.c('FillBucket', {
+	_mapChar: '@',
+	init: function () {
+		this.requires('Actor, Mouse, Tint')
+		this.tint("#969696", 0.3);
 	}
 });

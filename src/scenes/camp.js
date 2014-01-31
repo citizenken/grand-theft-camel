@@ -5,7 +5,7 @@ Crafty.scene('RandomCamp', function() {
 	var areaHeight = randomBetween(20, 30);
 	var campWidth = areaWidth - 3;
 	var campHeight = areaHeight - 3;
-	
+
 	Game.map_grid.width = areaWidth;
 	Game.map_grid.height = areaHeight;
 	Crafty.init(Game.width(), Game.height());
@@ -39,9 +39,9 @@ Crafty.scene('RandomCamp', function() {
 	}
 
 	// Player character, placed at 5, 5 on our grid
-	// this.player = Crafty.e('WhiteCharacter, Player').at(playerStartX, playerStartY);
+	this.player = Crafty.e('WhiteCharacter, Player').at(5, 5);
 	// this.follower = Crafty.e('Camel');
-	// Game.player = this.player;
+	Game.player = this.player;
 	// Crafty.viewport.centerOn(Game.player)
 	// Crafty.viewport.follow(Game.player)
 

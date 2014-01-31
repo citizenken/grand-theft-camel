@@ -23,7 +23,9 @@ var MapEditor = {
 	},
 
 	paintMode: false,
+	eraseMode: false,
 	selectedEntity: null,
+	playerPlaced: null,
 	//initialize and start MapEditor
 	start: function() {
 		//Start crafty and set background color

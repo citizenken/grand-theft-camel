@@ -89,7 +89,14 @@
 	init: function() {
 	this.requires('Scenery, spr_uncovered_well_32')
 	},
-	});	
+	});
+
+	Crafty.c('Mountain', {
+	init: function() {
+	this.requires('Scenery')
+		.color('brown');
+	},
+	});
 
 	// A Bush is just an Actor with a certain color
 	Crafty.c('Bush', {

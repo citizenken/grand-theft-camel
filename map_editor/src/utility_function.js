@@ -42,7 +42,8 @@ $(document).ready(function() {
 
 function initiateMap(map) {
 	if (map) {
-		map = map.replace(/\s+/g, '');
+		map = map.replace(/[\s+\']/g, '');
+		console.log(map);
 		var mapArray = map.split(',');
 		convertMap(mapArray);
 		MapEditor.mapToLoad = null;
@@ -67,6 +68,7 @@ function clearMap() {
 			map[y][x] = Crafty.e('EmptySpace').at(x,y);
 		}
 	}
+	MapEditor.playerPlaced = false;
 }
 
 function showMapModel() {
@@ -96,11 +98,11 @@ function saveMap(){
 	// var height = MapEditor.map_grid.height;
 	var entityNumber = 0;
 	var map = [];
-	var first = Crafty('EmptySpace, Oasis, Tent');
+	var first = Crafty('Actor');
 	var i = first[0];
 	for (var y = 0; y < height ; y++) {
 		map[y] = [];
-		var rowString = '<br>';
+		var rowString = '<br>\'';
 		for (var x = 0; x < width; x++) {
 			var currentEntity = Crafty(i);
 			if (currentEntity.at().x === x) {
@@ -108,7 +110,7 @@ function saveMap(){
 			}
 			i++;
 		}
-		map[y] = rowString;
+		map[y] = rowString + '\'';
 	}
 	map = 'var newMap = [' + map + ']';
 	$('#saveBox').html('Copy this into src/scenes/maps/ for inclusion in the game.</br></br>' + map);
@@ -123,7 +125,7 @@ function buildMap() {
 	$('#mapToLoad').toggle();
 	$('#savemap').prop('disabled', false);
 	MapEditor.mapToLoad = map;
-	// Crafty('DOM').destroy();
+	console.log(Crafty.scene('EditMap'));
 	Crafty.scene('EditMap');
 
 }
@@ -160,7 +162,7 @@ function parsemap (mapArray) {
 				break;
 				case 'w':
 					map[y][x] = Crafty.e('Well').at(x,y);
-				break;				
+				break;
 				case '@':
 					map[y][x] = Game.player = Crafty.e('WhiteCharacter, Player').at(x,y);
 				break;
