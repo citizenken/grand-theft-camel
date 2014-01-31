@@ -78,6 +78,19 @@
 	},
 	});
 
+	Crafty.c('Tent', {
+	init: function() {
+	this.requires('Scenery')
+	  .color('black');
+	},
+	});
+
+	Crafty.c('Well', {
+	init: function() {
+	this.requires('Scenery, spr_uncovered_well_32')
+	},
+	});	
+
 	// A Bush is just an Actor with a certain color
 	Crafty.c('Bush', {
 	init: function() {

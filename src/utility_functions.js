@@ -22,6 +22,9 @@ function parsemap (mapArray) {
 				case 'o':
 					Crafty.e('Oasis').at(x,y);
 				break;
+				case 't':
+					Crafty.e('Tent').at(x,y);
+				break;				
 				case '@':
 					Game.player = Crafty.e('WhiteCharacter, Player').at(x,y);
 				break;

@@ -56,20 +56,34 @@
 		<input type='button' id='savemap' value='Save Map'/>
 		<input type="button" id="clearmap" style="float:right" value="Clear Map">
 	</div></br>
-	<h3 id='paint-mode' style='display:none;text-align:center;'>Paint Mode is enabled. Press 'P' again to disable</h3>
 	<div id="saveBox" class="window"></div>
 	<div id="loadBox" class="window">
 		<input type='button' id='buildmap' value='Build Map'/>
 		<textarea id='mapToLoad' rows="30" cols="50"></textarea>
 	</div>
-	<div id="palette" style="width:100px;height:300px;background-color:#d3d3d3;position:absolute;text-align:center;margin-left:200px;">
-		<span>Entity Palette</span></br></br>
+	<div id="palette" style="width:100px;height:400px;background-color:#d3d3d3;text-align:center;float:left;">
+		<span>Entity Palette</span>
+		</br></br>
 		<table>
 			<tr>
-				<td><div class="palette-entity" id="TentPalette" style="background-color:black" title="Tent"></div></td>
-				<td><div class="palette-entity" id="OasisPalette" style="background-color:blue" title="Oasis"></div></td>
+				<td><div class="palette-entity" id="Tent" style="background-color:black" title="Tent"></div></td>
+				<td><div class="palette-entity" id="Oasis" style="background-color:blue" title="Oasis"></div></td>
 			</tr>
+			<tr>
+				<td><div class="palette-entity" id="Player" style="background:url(assets/editor_assets/player_sprite.jpg) center no-repeat" title="Player"></div></td>
+				<td><div class="palette-entity" id="Mountain" style="background-color:brown" title="Mountain"></div></td>
+			</tr>
+			<tr>
+				<td><div class="palette-entity" id="Well" style="background-color:#BFEFFF" title="well"></div></td>
+				<td><div class="palette-entity" id="Oasis" style="background-color:blue" title="Oasis"></div></td>
+			</tr>
+			<tr>
+				<td><div class="palette-entity" id="Tent" style="background-color:black" title="Tent"></div></td>
+				<td><div class="palette-entity" id="Oasis" style="background-color:blue" title="Oasis"></div></td>
+			</tr>									
 		</table>
+		</br></br>
+		<span id='paint-mode' style='display:none;text-align:center;'>Paint Mode Enabled</span>
 	</div>
 </body>
 </html>

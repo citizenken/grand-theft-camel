@@ -1,7 +1,8 @@
 Crafty.c('Grid', {
 	init: function() {
 		this.requires('Mouse')
-		.bind('MouseOver', function() {
+		.bind('MouseOver', function(data) {
+			console.log(data);
 			if (MapEditor.paintMode && MapEditor.selectedEntity) {
 				this.addComponent(MapEditor.selectedEntity);
 				this.removeComponent('EmptySpace');
@@ -73,5 +74,28 @@ Crafty.c('Tent', {
 	init: function () {
 		this.requires('Actor, Mouse, Color')
 		.color('black')
+	}
+});
+
+Crafty.c('Mountain', {
+	_mapChar: 'm',
+	init: function () {
+		this.requires('Actor, Mouse, Color')
+		.color('brown')
+	}
+});
+
+Crafty.c('Well', {
+	_mapChar: 'w',
+	init: function () {
+		this.requires('Actor, Mouse, Color, spr_uncovered_well_32')
+		// .color('#BFEFFF')
+	}
+});
+
+Crafty.c('Player', {
+	_mapChar: '@',
+	init: function () {
+		this.requires('Actor, Mouse, spr_white_player')
 	}
 });

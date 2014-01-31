@@ -13,7 +13,6 @@ $(document).ready(function() {
 		$('div').removeClass('selected');
 		$(this).addClass('selected');
 		var component = $(this).attr('id');
-		component = component.replace('Palette', '');
 		MapEditor.selectedEntity = component;
 	}
 
@@ -150,12 +149,18 @@ function parsemap (mapArray) {
 				case 'b':
 					map[y][x] = Crafty.e('Bush').at(x,y);
 				break;
+				case 'm':
+					map[y][x] = Crafty.e('Mountain').at(x,y);
+				break;
 				case 'o':
 					map[y][x] = Crafty.e('Oasis').at(x,y);
 				break;
 				case 't':
 					map[y][x] = Crafty.e('Tent').at(x,y);
 				break;
+				case 'w':
+					map[y][x] = Crafty.e('Well').at(x,y);
+				break;				
 				case '@':
 					map[y][x] = Game.player = Crafty.e('WhiteCharacter, Player').at(x,y);
 				break;

@@ -14,6 +14,9 @@ Crafty.scene('Loading', function(){
 	'assets/actors/camel.png',
 	'assets/actors/player_character.png',
 	'assets/actors/lead_camel_white.png',
+	'assets/tiles/desert_objects_32.png',
+	'assets/tiles/desert_objects_64.png',
+	'assets/tiles/desert_objects_32x64.png'	
 	], function(){
 	// Once the images are loaded...
 
@@ -35,6 +38,10 @@ Crafty.scene('Loading', function(){
 		spr_lead_camel_white:  [0, 1, 0, 0],
 	});
 
+	Crafty.sprite(32, 32, 'assets/actors/desert_objects_32.png', {
+		spr_covered_well_32:  [0, 4, 0, 0],
+		spr_uncovered_well_32:  [1, 4, 0, 0],
+	});	
 	// Now that our sprites are ready to draw, start the game
 	Crafty.scene('Desert');
   })
