@@ -29,7 +29,7 @@
 		margin-left: auto;
 		word-wrap: break-word;
 	}
-	.selected {
+	.selected, .selectedTool {
 		border: solid 2px red;
 	}
 /*	.palette-entity {
@@ -50,7 +50,7 @@
 /*	td {
 		width:32px;
 	}*/
-	.palette-entity {
+	.palette-entity, .tool {
 		width:32px;
 		height:32px;
 	}
@@ -70,7 +70,9 @@
 	</div>
 	<div id="palette" style="width:150px;height:400px;background-color:#d3d3d3;text-align:center;float:left;">
 		<span>Entity Palette</span></br>
-		<span title="Select your entity. Left click on the map to place the entity, right click on the entity to remove it. The entity must be selected inorder to remove it. Press 'P' to toggle paint mode and 'E' to toggle eraser mode.">Hover for Instructions</span>
+		<span title="Select your entity. Left click on the map to place the entity, right click on the entity to remove it. The entity must be selected in order to remove it.">Hover for Instructions</span>
+		<span 
+		title="Press to toggle tool: P = Paint; E = Eraser; F = Fill">Hover for Tool Info</span>
 		</br></br>
 		<table>
 			<tr>
@@ -87,13 +89,11 @@
 			</tr>
 			<tr>
 			</tr>
-			<tr>
-			</tr>
 		</table>
 		</br></br>
 		<span id='paint-mode' style='display:none;text-align:center;'>Paint Mode Enabled</span>
 		<span id='erase-mode' style='display:none;text-align:center;'>Erase Mode Enabled</span>
-		<span id='bucket-mode' style='display:none;text-align:center;'>Bucket Mode Enabled</span>
+		<span id='fill-mode' style='display:none;text-align:center;'>Fill Mode Enabled</span>
 	</div>
 </body>
 </html>

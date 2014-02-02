@@ -43,7 +43,6 @@ $(document).ready(function() {
 function initiateMap(map) {
 	if (map) {
 		map = map.replace(/[\s+\']/g, '');
-		console.log(map);
 		var mapArray = map.split(',');
 		convertMap(mapArray);
 		MapEditor.mapToLoad = null;
@@ -125,7 +124,6 @@ function buildMap() {
 	$('#mapToLoad').toggle();
 	$('#savemap').prop('disabled', false);
 	MapEditor.mapToLoad = map;
-	console.log(Crafty.scene('EditMap'));
 	Crafty.scene('EditMap');
 
 }
@@ -140,8 +138,6 @@ function convertMap(map) {
 }
 
 function parsemap (mapArray) {
-	// var width = MapEditor.map_grid.width;
-	// var height = MapEditor.map_grid.height;
 	var map = [];
 	var i = 2;
 	for (var y = 0; y < height; y++) {
@@ -164,7 +160,7 @@ function parsemap (mapArray) {
 					map[y][x] = Crafty.e('Well').at(x,y);
 				break;
 				case '@':
-					map[y][x] = Game.player = Crafty.e('WhiteCharacter, Player').at(x,y);
+					map[y][x] = Crafty.e('Player').at(x,y);
 				break;
 				case '#':
 					map[y][x] = Crafty.e('EmptySpace').at(x,y);

@@ -24,6 +24,7 @@ var MapEditor = {
 
 	paintMode: false,
 	eraseMode: false,
+	fillMode: false,
 	selectedEntity: null,
 	playerPlaced: null,
 	//initialize and start MapEditor
