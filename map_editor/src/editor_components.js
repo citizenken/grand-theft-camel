@@ -14,7 +14,9 @@ Crafty.c('Grid', {
 		})
 		.bind('MouseDown', function (data) {
 			if (data.button === 0) {
-				if (this.has('EmptySpace') && MapEditor.selectedEntity) {
+				if (MapEditor.fillMode) {
+					this.calculateAreaToFill(this);
+				}else if (this.has('EmptySpace') && MapEditor.selectedEntity) {
 					this.addEntity(this, MapEditor.selectedEntity);
 				}
 			} else if (data.button === 2) {
@@ -30,23 +32,15 @@ Crafty.c('Grid', {
 	},
 
 	addEntity: function (entity, selectedEntity) {
-		if (selectedEntity !== 'FillBucket') {
-			if (selectedEntity === 'Player' && !MapEditor.playerPlaced) {
-				MapEditor.playerPlaced = true;
-				entity.addComponent(selectedEntity);
-			} else if (selectedEntity === 'Player' && MapEditor.playerPlaced) {
-				window.alert('Player is already placed. Only one is allowed per map');
-			} else if (entity.has('EmptySpace') && selectedEntity) {
-				entity.addComponent(selectedEntity);
-			}
-			entity.removeComponent('EmptySpace');
-		} else {
-			this.fillBucketSelect(entity, selectedEntity);
+		if (selectedEntity === 'Player' && !MapEditor.playerPlaced) {
+			MapEditor.playerPlaced = true;
+			entity.addComponent(selectedEntity);
+		} else if (selectedEntity === 'Player' && MapEditor.playerPlaced) {
+			window.alert('Player is already placed. Only one is allowed per map');
+		} else if (entity.has('EmptySpace') && selectedEntity) {
+			entity.addComponent(selectedEntity);
 		}
-	},
-
-	fillBucketSelect: function(entity, selectedEntity) {
-		entity.addComponent(selectedEntity);
+		entity.removeComponent('EmptySpace');
 	},
 
 	removeEntity: function(entity, selectedEntity) {
@@ -60,6 +54,45 @@ Crafty.c('Grid', {
 			entity.removeComponent('Sprite');
 		}
 		entity.addComponent('EmptySpace');
+	},
+
+	calculateAreaToFill: function(clickedEntity) {
+		var startingLocation = clickedEntity.at();
+		var entitiesToFill = [];
+		var y = this[0];
+		while (Crafty(y).has('EmptySpace') && Crafty(y).at().x === startingLocation.x) {
+			var x = Crafty(y)[0];
+			while (Crafty(x).has('EmptySpace') && Crafty(x).at().y === Crafty(y).at().y) {
+				entitiesToFill.push(Crafty(x)[0]);
+				x--;
+			}
+			x = Crafty(y)[0];
+			while (Crafty(x).has('EmptySpace') && Crafty(x).at().y === Crafty(y).at().y) {
+				entitiesToFill.push(Crafty(x)[0]);
+				x++;
+			}
+			entitiesToFill.push(Crafty(y)[0]);
+			y = y + 30;
+		}
+		y = this[0];
+		while (Crafty(y).has('EmptySpace') && Crafty(y).at().x === startingLocation.x) {
+			var x = Crafty(y)[0];
+			while (Crafty(x).has('EmptySpace') && Crafty(x).at().y === Crafty(y).at().y) {
+				entitiesToFill.push(Crafty(x)[0]);
+				x--;
+			}
+			x = Crafty(y)[0];
+			while (Crafty(x).has('EmptySpace') && Crafty(x).at().y === Crafty(y).at().y) {
+				entitiesToFill.push(Crafty(x)[0]);
+				x++;
+			}
+			entitiesToFill.push(Crafty(y)[0]);
+			y = y - 30;
+		}
+		for (var i = 0; i < entitiesToFill.length; i++) {
+			var entity = Crafty(entitiesToFill[i]);
+			this.addEntity(entity, MapEditor.selectedEntity);
+		}
 	},
 	// Locate this entity at the given position on the grid
 	at: function(x, y) {

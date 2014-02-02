@@ -12,11 +12,13 @@ Crafty.scene('EditMap', function(){
 							$('#erase-mode').hide();
 						}
 						MapEditor.paintMode = true;
+						$('#brush').addClass('selectedTool');
 						$('#paint-mode').toggle();
 					} else if (Crafty.keys.P && !MapEditor.paintMode && MapEditor.selectedEntity === 'Player') {
 						window.alert('Paint mode is disabled for the Player entity. Only one is allowed per map');
 					} else {
 						MapEditor.paintMode = false;
+						$('#brush').removeClass('selectedTool');
 						$('#paint-mode').toggle();
 					}
 					break;
@@ -33,8 +35,8 @@ Crafty.scene('EditMap', function(){
 						$('#erase-mode').toggle();
 					}
 					break;
-				case Crafty.keys.B:
-					if (!MapEditor.bucketMode) {
+				case Crafty.keys.F:
+					if (!MapEditor.fillMode) {
 						if (MapEditor.paintMode) {
 							MapEditor.paintMode = false;
 							$('#paint-mode').hide();
@@ -43,27 +45,11 @@ Crafty.scene('EditMap', function(){
 							MapEditor.eraseMode = false;
 							$('#erase-mode').hide();
 						}
-						MapEditor.bucketMode = true;
-						MapEditor.selectedEntity = 'FillBucket';
-						$('#bucket-mode').toggle();
+						MapEditor.fillMode = true;
+						$('#fill-mode').toggle();
 					} else {
-						MapEditor.bucketMode = false;
-						MapEditor.selectedEntity = null;
-						$('#bucket-mode').toggle();
-					}
-					break;
-				case Crafty.keys.F:
-				console.log('blah');
-					if (MapEditor.selectedEntity !== 'FillBucket' || MapEditor.selectedEntity !== 'Player') {
-						var i = 0;
-						Crafty('FillBucket').each(function() {
-							this.toggleComponent(MapEditor.selectedEntity);
-							this.removeComponent('FillBucket');
-							i++;
-						})
-						window.alert(i + ' ' + MapEditor.selectedEntity + 's added');
-					} else {
-						window.alert('Please select an entity before filling');
+						MapEditor.fillMode = false;
+						$('#fill-mode').toggle();
 					}
 					break;
 			}
