@@ -6,6 +6,7 @@
 		_currentLocation: null,
 		_nextLocation: null,
 		_hitPoints: 5,
+		_justTriggeredScene: false,
 	})
 
 	Crafty.c('WhiteCharacter', {
@@ -75,54 +76,60 @@
 						}
 					}
 				})
-				.onHit('Actor', function(data) {
-					if (data) {
-						this.collisionHandler(data);
+				.onHit('Void', function(data) {
+					var voidObject = data[0].obj;
+					console.log(Game.currentMap);
+					if (this.x === voidObject.x || this.y === voidObject.y) {
+						if (this._justTriggeredScene === false) {
+							this._justTriggeredScene = true;
+							changeMap(this._direction);
+						}
+					}
+
+				}, function() {
+					this._justTriggeredScene = false;
+				})
+				.onHit('Scenery', function(data) {
+					var hitObject = data[0].obj;
+					if (hitObject.has('Scenery')) {
+						if (this.steps > 0) {
+							this.steps = 0;
+						}
+						this._speed = 0;
+						if (this._movement) {
+						  this.x -= this._movement.x;
+						  this.y -= this._movement.y;
+						}
+					}
+				})
+				.onHit('Camel', function(data) {
+					if (Game.playerKeys.M && hitObject.has('Camel')) {
+						this.mount(data);
 					}
 				})
 				.bind('Moved', function(data) {
 					this._previousLocation = data;
 					this._currentLocation = {x:this.x, y:this.y};
 					this._nextLocation = {x:this.x + this._movement.x, y:this.y + this._movement.y};
+
 				})
-				var animationSpeed = 16;
-				this.bind('NewDirection', function(data) {
-					if (data.y == -1 || data == 'UP') {
+				.bind('NewDirection', function(data) {
+					if (data.y === -1 || data === 'UP') {
 						this._direction = 'UP';
-						this.animate('PlayerUp', -1)
-					} else if (data.y == 1 || data == 'DOWN') {
+						this.animate('PlayerUp', -1);
+					} else if (data.y === 1 || data === 'DOWN') {
 						this._direction = 'DOWN';
-						this.animate('PlayerDown', -1)
-					} else if (data.x == 1 || data == 'RIGHT') {
+						this.animate('PlayerDown', -1);
+					} else if (data.x === 1 || data === 'RIGHT') {
 						this._direction = 'RIGHT';
-						this.animate('PlayerRight', -1)
-					} else if (data.x == -1 || data == 'LEFT') {
+						this.animate('PlayerRight', -1);
+					} else if (data.x === -1 || data === 'LEFT') {
 						this._direction = 'LEFT';
-						this.animate('PlayerLeft', -1)
+						this.animate('PlayerLeft', -1);
 					} else {
-						this.pauseAnimation()
+						this.pauseAnimation();
 					}
 				});
-		},
-
-		collisionHandler: function(data) {
-			var hitObject = data[0].obj
-			if (hitObject.has('Scenery') ) {
-				if (this.steps > 0) {
-					this.steps = 0;
-				}
-				this._speed = 0;
-				if (this._movement) {
-				  this.x -= this._movement.x;
-				  this.y -= this._movement.y;
-				}
-			}
-
-			if (Game.playerKeys['M'] && hitObject.has('Camel')) {
-				this.mount(data);
-			}
-
-
 		},
 
 		mount: function(data) {

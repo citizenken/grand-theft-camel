@@ -42,10 +42,8 @@ $(document).ready(function() {
 
 function initiateMap(map) {
 	if (map) {
-		map = map.replace(/[\s+\'V]/g, '');
+		map = map.replace(/[\s+\']/g, '');
 		var mapArray = map.split(',');
-		mapArray.splice(0,1);
-		// mapArray.splice(mapArray.length - 1,1);
 		convertMap(mapArray);
 		MapEditor.mapToLoad = null;
 	} else {
@@ -101,17 +99,9 @@ function saveMap(){
 	var map = [];
 	var first = Crafty('Actor');
 	var i = first[0];
-	for (var y = 0; y <= height ; y++) {
+	for (var y = 0; y < height; y++) {
 		map[y] = [];
 		var rowString = '<br>\'';
-		if (y == 0 || y == height) {
-			for (var z = 0; z < width; z++) {
-				rowString += 'V';
-			}
-			map[y] = rowString + '\'';
-			continue;
-		}
-		rowString += 'V';
 		for (var x = 0; x < width; x++) {
 			var currentEntity = Crafty(i);
 			if (currentEntity.at().x === x) {
@@ -119,7 +109,7 @@ function saveMap(){
 			}
 			i++;
 		}
-		map[y] = rowString + 'V\'';
+		map[y] = rowString + '\'';
 	}
 	map = 'var newMap = [' + map + ']';
 	$('#saveBox').html('Copy this into src/scenes/maps/ for inclusion in the game.</br></br>' + map);
@@ -132,6 +122,7 @@ function buildMap() {
 	$('#cr-stage').toggle();
 	$('#loadBox').toggle();
 	$('#mapToLoad').toggle();
+	$('#loadmap').val('Load Map');
 	$('#savemap').prop('disabled', false);
 	MapEditor.mapToLoad = map;
 	Crafty.scene('EditMap');
