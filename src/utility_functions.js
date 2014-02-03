@@ -37,3 +37,14 @@ function parsemap (mapArray) {
 		}
 	};
 }
+
+function createZone(selfSceneString, topScene, botScene, leftScene, rightScene, portals) {
+	return {
+		selfSceneString: selfSceneString,
+		topScene: topScene,
+		botScene: botScene,
+		leftScene: leftScene,
+		rightScene: rightScene,
+		portals: portals
+	};
+}
