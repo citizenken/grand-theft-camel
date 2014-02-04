@@ -87,23 +87,23 @@ Crafty.c('TargetMovement', {
 Crafty.c('Grid', {
 init: function() {
 	this.bind('KeyDown', function(e) {
-		if (e.key == Crafty.keys['ESC']) {
+		if (e.key === Crafty.keys.ESC) {
 			Crafty.pause();
 		}
-	})
+	});
 	this.bind('Pause', function() {
 		// Crafty.e('PauseBox').draw();
-	})
+	});
 	this.attr({
 		w: Game.map_grid.tile.width,
 		h: Game.map_grid.tile.height
-	})
+	});
 },
 
 // Locate this entity at the given position on the grid
 at: function(x, y) {
 if (x === undefined && y === undefined) {
-  return { x: this.x/Game.map_grid.tile.width, y: this.y/Game.map_grid.tile.height }
+  return { x: this.x/Game.map_grid.tile.width, y: this.y/Game.map_grid.tile.height };
 } else {
   this.attr({ x: x * Game.map_grid.tile.width, y: y * Game.map_grid.tile.height });
   return this;
@@ -119,16 +119,12 @@ Crafty.c('PauseBox', {
 	},
 });
 
-Crafty.c('Void', {
-	init: function() {
-		this.requires('Grid, Tint');
-		this.tint('#969696', 0.3);
-	}
-})
-
 Crafty.c('Actor', {
 	init: function() {
-	this.requires('2D, Canvas, Grid')
+		this.requires('2D, Canvas, Grid');
+		this.bind('Click', function () {
+			console.log(this);
+		});
 	},
 		checkDead: function() {
 			if (this._hitPoints === 0) {
@@ -138,8 +134,16 @@ Crafty.c('Actor', {
 		}
 });
 
+Crafty.c('Void', {
+	init: function() {
+		this.requires('Actor, Color, Tint');
+		this.tint('#969696', 0.3);
+		this.color('green');
+	}
+});
+
 Crafty.c('EmptySpace', {
 	init: function () {
-		this.requires('Actor')
+		this.requires('Actor');
 	}
 });

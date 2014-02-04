@@ -22,6 +22,7 @@
   "jquery": true,
   "yui": true,
   "globals": {
+    "Game": true,
     "Crafty": true,
     "console": true,
     "MapEditor": true,

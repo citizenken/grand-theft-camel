@@ -16,34 +16,46 @@ function parsemap (mapArray) {
 			var newEntity;
 			switch (mapArray[y][x]) {
 				case 'b':
-						newEntity = Crafty.e('Bush').at(x,y);
+					Crafty.e('Bush').at(x,y);
 				break;
 				case 'm':
-						newEntity = Crafty.e('Mountain').at(x,y);
+					Crafty.e('Mountain').at(x,y);
 				break;
 				case 'o':
-						newEntity = Crafty.e('Oasis').at(x,y);
+					Crafty.e('Oasis').at(x,y);
 				break;
 				case 't':
-						newEntity = Crafty.e('Tent').at(x,y);
+					Crafty.e('Tent').at(x,y);
 				break;
 				case 'w':
-						newEntity = Crafty.e('Well').at(x,y);
+					Crafty.e('Well').at(x,y);
 				break;
 				case '@':
 					Game.player = Crafty.e('WhiteCharacter, Player').at(x,y);
 				break;
-				case '#':
-						newEntity = Crafty.e('EmptySpace').at(x,y);
-				break;
 				default:
+					if (y === 0 || x === 0 || y === mapArray.length - 1 || x === mapArray[y].length - 1) {
+						Crafty.e('Void').at(x,y);
+					}
 				break;
 			}
-			if (newEntity && y === 0 || x === 0 || y === mapArray.length - 1 || x === mapArray[y].length - 1) {
+/*			if (newEntity && y === 0 || x === 0 || y === mapArray.length - 1 || x === mapArray[y].length - 1) {
+				if (newEntity.has('Well')) {
+				console.log(newEntity, 'this is entity x ' + newEntity.at().x, 'this is entity y ' + newEntity.at().y, 'this is x ' + x, 'this is y ' + y, mapArray.length - 1, mapArray[y].length - 1);
+
+				}
 				newEntity.addComponent('Void');
-			}
+			}*/
 		}
 	};
+}
+
+function addVoid (mapArray, newEntity, x, y) {
+	if (newEntity && y === 0 || x === 0 || y === mapArray.length - 1 || x === mapArray[y].length - 1) {
+		newEntity.addComponent('Void');
+	} /*else if (y === 0 || x === 0 || y === mapArray.length - 1 || x === mapArray[y].length - 1) {
+		Crafty.e('Void').at(x, y);
+	}*/
 }
 
 function createZone(selfSceneString, topScene, botScene, leftScene, rightScene, portals) {

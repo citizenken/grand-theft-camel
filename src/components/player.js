@@ -66,12 +66,10 @@
 							case 'DOWN':
 								break;
 							case 'LEFT':
-									this.animate('PlayerLeft', -1)
+									// this.animate('PlayerLeft', -1)
 								break;
 							case 'RIGHT':
-									// this.animate('PlayerRight', -1);
-									this.resumeAnimation();
-									// console.log(this._currentReel);
+									// this.resumeAnimation();
 								break;
 						}
 					}
@@ -83,6 +81,7 @@
 						if (this._justTriggeredScene === false) {
 							this._justTriggeredScene = true;
 							changeMap(this._direction);
+							this.x = 0;
 						}
 					}
 
@@ -128,6 +127,7 @@
 						this.animate('PlayerLeft', -1);
 					} else {
 						this.pauseAnimation();
+						this.reelPosition(1);
 					}
 				});
 		},
