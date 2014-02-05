@@ -51,17 +51,17 @@ function parsemap (mapArray) {
 					if ((y % (Game.map_grid.height/2) === 0) || (x % (Game.map_grid.width/2) === 0) || x === (Game.map_grid.width - 1) || y === (Game.map_grid.height - 1)) {
 						var newVoid = Crafty.e('Void').at(x,y);
 						occupiedSquares[y][x] = 'void';
-						if (((x % (Game.map_grid.width/2) === 0) || x === (Game.map_grid.width - 1))) {
+						if ((x % (Game.map_grid.width/2) === 0) || x === (Game.map_grid.width - 1)) {
 							if (xLinesAt.indexOf(x) === -1) {
 								xLinesAt.push(x);
 							}
-							newVoid._onEdge = xLinesAt[xLinesAt.indexOf(x)];
+							newVoid._onEdge = {x:xLinesAt[xLinesAt.indexOf(x)], y:null, start:x, end:x + (Game.map_grid.width/2)};
 						}
-						if (((y % (Game.map_grid.height/2) === 0) || y === (Game.map_grid.height - 1))) {
+						if ((y % (Game.map_grid.height/2) === 0) || y === (Game.map_grid.height - 1)) {
 							if (yLinesAt.indexOf(y) === -1) {
 								yLinesAt.push(y);
 							}
-							newVoid._onEdge = yLinesAt[yLinesAt.indexOf(x)];
+							newVoid._onEdge = {x:null, y:yLinesAt[yLinesAt.indexOf(y)], start:y, end:y + (Game.map_grid.height/2)};
 						}
 
 					} else {
@@ -71,7 +71,7 @@ function parsemap (mapArray) {
 			}
 		}
 	}
-	console.log(xLinesAt, yLinesAt);
+	Game.currentMap = mapArray;
 	Game.currentMap.occupiedSquares = occupiedSquares;
 }
 
@@ -116,4 +116,33 @@ function changeMap (direction) {
 
 	}
 	return;
+}
+
+function randomlyPopulateNextSection(x, y, start, end, playerx, playery) {
+	var mapArray = Game.currentMap;
+	var occupied = Game.currentMap.occupiedSquares;
+	var i;
+	if (y) {
+		for (y = y; y < end; y++) {
+			for (x = 0; x < mapArray[y].length; x++) {
+				if (!occupied[y][x] && Math.random() < 0.01 && x !== playerx && y !== playery) {
+				// Place a bush entity at the current tile
+					i++;
+					Crafty.e('SandDune').at(x,y);
+					occupied[y][x] = true;
+				}
+			}
+		}
+	} else if (x) {
+		for (y = 0; y < mapArray.length; y++) {
+			for (x = start; x < end; x++) {
+				if (!occupied[y][x] && Math.random() < 0.01 && x !== playerx && y !== playery) {
+				// Place a bush entity at the current tile
+					i++;
+					Crafty.e('SandDune').at(x,y);
+					occupied[y][x] = true;
+				}
+			}
+		}
+	}
 }

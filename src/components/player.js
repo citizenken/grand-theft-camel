@@ -80,7 +80,24 @@
 					if (this.x === voidObject.x || this.y === voidObject.y) {
 						if (this._justTriggeredScene === false) {
 							this._justTriggeredScene = true;
-							console.log(voidObject._onEdge);
+							var edge = voidObject._onEdge;
+							switch (this._direction)
+							{
+								case 'UP':
+										// randomlyPopulateNextSection(edge.x, edge.y, edge.start, edge.end, this.x, this.y);
+									break;
+								case 'DOWN':
+										randomlyPopulateNextSection(edge.x, edge.y, edge.start, edge.end, this.x, this.y);
+									break;
+								case 'LEFT':
+										// randomlyPopulateNextSection(edge.x, edge.y, edge.start, edge.end, this.x, this.y);
+									break;
+								case 'RIGHT':
+										randomlyPopulateNextSection(edge.x, edge.y, edge.start, edge.end, this.x, this.y);
+									break;
+							}
+/*							randomlyPopulateNextSection(x, y, start, end, playerx, playery)
+							onsole.log(voidObject._onEdge);*/
 
 						}
 					}

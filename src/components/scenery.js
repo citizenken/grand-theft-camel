@@ -37,7 +37,7 @@
 
 	Crafty.c('Well', {
 		init: function() {
-		this.requires('Scenery, spr_uncovered_well_32')
+		this.requires('Scenery, spr_uncovered_well_32');
 		},
 	});
 
@@ -53,5 +53,12 @@
 		init: function() {
 		this.requires('Scenery, Color')
 		  .color('rgb(20, 185, 40)');
+		},
+	});
+
+	Crafty.c('SandDune', {
+		init: function() {
+		this.requires('Scenery, Color')
+		  .color('white');
 		},
 	});
