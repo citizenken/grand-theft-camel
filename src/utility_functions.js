@@ -11,51 +11,74 @@ function convertMap(map, width, height) {
 }
 
 function parsemap (mapArray) {
+	var occupiedSquares = [];
+	var xLinesAt = [];
+	var yLinesAt = [0];
 	for (var y = 0; y < mapArray.length; y++) {
+		occupiedSquares[y] = [];
 		for(var x = 0; x < mapArray[y].length; x++) {
 			var newEntity;
 			switch (mapArray[y][x]) {
 				case 'b':
-					Crafty.e('Bush').at(x,y);
+					newEntity = Crafty.e('Bush').at(x,y);
+					occupiedSquares[y][x] = true;
+					addVoid(newEntity, x, y);
 				break;
 				case 'm':
-					Crafty.e('Mountain').at(x,y);
+					newEntity = Crafty.e('Mountain').at(x,y);
+					occupiedSquares[y][x] = true;
+					addVoid(newEntity, x, y);
 				break;
 				case 'o':
-					Crafty.e('Oasis').at(x,y);
+					newEntity = Crafty.e('Oasis').at(x,y);
+					occupiedSquares[y][x] = true;
+					addVoid(newEntity, x, y);
 				break;
 				case 't':
-					Crafty.e('Tent').at(x,y);
+					newEntity = Crafty.e('Tent').at(x,y);
+					occupiedSquares[y][x] = true;
+					addVoid(newEntity, x, y);
 				break;
 				case 'w':
-					Crafty.e('Well').at(x,y);
+					newEntity = Crafty.e('Well').at(x,y);
+					occupiedSquares[y][x] = true;
+					addVoid(newEntity, x, y);
 				break;
 				case '@':
 					Game.player = Crafty.e('WhiteCharacter, Player').at(x,y);
 				break;
 				default:
-					if (y === 0 || x === 0 || y === mapArray.length - 1 || x === mapArray[y].length - 1) {
-						Crafty.e('Void').at(x,y);
+					if ((y % (Game.map_grid.height/2) === 0) || (x % (Game.map_grid.width/2) === 0) || x === (Game.map_grid.width - 1) || y === (Game.map_grid.height - 1)) {
+						var newVoid = Crafty.e('Void').at(x,y);
+						occupiedSquares[y][x] = 'void';
+						if (((x % (Game.map_grid.width/2) === 0) || x === (Game.map_grid.width - 1))) {
+							if (xLinesAt.indexOf(x) === -1) {
+								xLinesAt.push(x);
+							}
+							newVoid._onEdge = xLinesAt[xLinesAt.indexOf(x)];
+						}
+						if (((y % (Game.map_grid.height/2) === 0) || y === (Game.map_grid.height - 1))) {
+							if (yLinesAt.indexOf(y) === -1) {
+								yLinesAt.push(y);
+							}
+							newVoid._onEdge = yLinesAt[yLinesAt.indexOf(x)];
+						}
+
+					} else {
+						occupiedSquares[y][x] = false;
 					}
 				break;
 			}
-/*			if (newEntity && y === 0 || x === 0 || y === mapArray.length - 1 || x === mapArray[y].length - 1) {
-				if (newEntity.has('Well')) {
-				console.log(newEntity, 'this is entity x ' + newEntity.at().x, 'this is entity y ' + newEntity.at().y, 'this is x ' + x, 'this is y ' + y, mapArray.length - 1, mapArray[y].length - 1);
-
-				}
-				newEntity.addComponent('Void');
-			}*/
 		}
-	};
+	}
+	console.log(xLinesAt, yLinesAt);
+	Game.currentMap.occupiedSquares = occupiedSquares;
 }
 
-function addVoid (mapArray, newEntity, x, y) {
-	if (newEntity && y === 0 || x === 0 || y === mapArray.length - 1 || x === mapArray[y].length - 1) {
+function addVoid (newEntity, x, y) {
+	if ((y % (Game.map_grid.height/2) === 0) || (x % (Game.map_grid.width/2) === 0) || x === (Game.map_grid.width - 1) || y === (Game.map_grid.height - 1)) {
 		newEntity.addComponent('Void');
-	} /*else if (y === 0 || x === 0 || y === mapArray.length - 1 || x === mapArray[y].length - 1) {
-		Crafty.e('Void').at(x, y);
-	}*/
+	}
 }
 
 function createZone(selfSceneString, topScene, botScene, leftScene, rightScene, portals) {

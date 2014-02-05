@@ -76,12 +76,12 @@
 				})
 				.onHit('Void', function(data) {
 					var voidObject = data[0].obj;
-					console.log(Game.currentMap);
+					// console.log(Game.currentMap);
 					if (this.x === voidObject.x || this.y === voidObject.y) {
 						if (this._justTriggeredScene === false) {
 							this._justTriggeredScene = true;
-							changeMap(this._direction);
-							this.x = 0;
+							console.log(voidObject._onEdge);
+
 						}
 					}
 
