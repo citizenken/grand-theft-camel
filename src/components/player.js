@@ -81,6 +81,7 @@
 						if (this._justTriggeredScene === false) {
 							this._justTriggeredScene = true;
 							var edge = voidObject._onEdge;
+							console.log(edge);
 							switch (this._direction)
 							{
 								case 'UP':

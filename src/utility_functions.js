@@ -14,6 +14,7 @@ function parsemap (mapArray) {
 	var occupiedSquares = [];
 	var xLinesAt = [];
 	var yLinesAt = [0];
+	var allObjects = [];
 	for (var y = 0; y < mapArray.length; y++) {
 		occupiedSquares[y] = [];
 		for(var x = 0; x < mapArray[y].length; x++) {
@@ -21,27 +22,32 @@ function parsemap (mapArray) {
 			switch (mapArray[y][x]) {
 				case 'b':
 					newEntity = Crafty.e('Bush').at(x,y);
-					occupiedSquares[y][x] = true;
+					occupiedSquares[y][x] = {type: 'Bush', id: newEntity[0]};
+					allObjects.push(occupiedSquares[y][x]);
 					addVoid(newEntity, x, y);
 				break;
 				case 'm':
 					newEntity = Crafty.e('Mountain').at(x,y);
-					occupiedSquares[y][x] = true;
+					occupiedSquares[y][x] = {type: 'Mountain', id: newEntity[0]};
+					allObjects.push(occupiedSquares[y][x]);
 					addVoid(newEntity, x, y);
 				break;
 				case 'o':
 					newEntity = Crafty.e('Oasis').at(x,y);
-					occupiedSquares[y][x] = true;
+					occupiedSquares[y][x] = {type: 'Oasis', id: newEntity[0]};
+					allObjects.push(occupiedSquares[y][x]);
 					addVoid(newEntity, x, y);
 				break;
 				case 't':
 					newEntity = Crafty.e('Tent').at(x,y);
-					occupiedSquares[y][x] = true;
+					occupiedSquares[y][x] = {type: 'Tent', id: newEntity[0]};
+					allObjects.push(occupiedSquares[y][x]);
 					addVoid(newEntity, x, y);
 				break;
 				case 'w':
 					newEntity = Crafty.e('Well').at(x,y);
-					occupiedSquares[y][x] = true;
+					occupiedSquares[y][x] = {type: 'Well', id: newEntity[0]};
+					allObjects.push(occupiedSquares[y][x]);
 					addVoid(newEntity, x, y);
 				break;
 				case '@':
@@ -50,18 +56,18 @@ function parsemap (mapArray) {
 				default:
 					if ((y % (Game.map_grid.height/2) === 0) || (x % (Game.map_grid.width/2) === 0) || x === (Game.map_grid.width - 1) || y === (Game.map_grid.height - 1)) {
 						var newVoid = Crafty.e('Void').at(x,y);
-						occupiedSquares[y][x] = 'void';
+						occupiedSquares[y][x] = {type: 'Well', id: newEntity[0]};;
 						if ((x % (Game.map_grid.width/2) === 0) || x === (Game.map_grid.width - 1)) {
 							if (xLinesAt.indexOf(x) === -1) {
 								xLinesAt.push(x);
 							}
-							newVoid._onEdge = {x:xLinesAt[xLinesAt.indexOf(x)], y:null, start:x, end:x + (Game.map_grid.width/2)};
+							newVoid._onEdge = {x:xLinesAt[xLinesAt.indexOf(x)], y:null, start:x, end:x + (Game.map_grid.width/2), zone: xLinesAt.indexOf(x)};
 						}
 						if ((y % (Game.map_grid.height/2) === 0) || y === (Game.map_grid.height - 1)) {
 							if (yLinesAt.indexOf(y) === -1) {
 								yLinesAt.push(y);
 							}
-							newVoid._onEdge = {x:null, y:yLinesAt[yLinesAt.indexOf(y)], start:y, end:y + (Game.map_grid.height/2)};
+							newVoid._onEdge = {x:null, y:yLinesAt[yLinesAt.indexOf(y)], start:y, end:y + (Game.map_grid.height/2), zone: yLinesAt.indexOf(y)};
 						}
 
 					} else {
@@ -73,6 +79,7 @@ function parsemap (mapArray) {
 	}
 	Game.currentMap = mapArray;
 	Game.currentMap.occupiedSquares = occupiedSquares;
+	Game.allObjects = allObjects;
 }
 
 function addVoid (newEntity, x, y) {
@@ -121,15 +128,16 @@ function changeMap (direction) {
 function randomlyPopulateNextSection(x, y, start, end, playerx, playery) {
 	var mapArray = Game.currentMap;
 	var occupied = Game.currentMap.occupiedSquares;
+	var allObjects = Game.allObjects;
 	var i;
 	if (y) {
 		for (y = y; y < end; y++) {
 			for (x = 0; x < mapArray[y].length; x++) {
 				if (!occupied[y][x] && Math.random() < 0.01 && x !== playerx && y !== playery) {
-				// Place a bush entity at the current tile
 					i++;
-					Crafty.e('SandDune').at(x,y);
-					occupied[y][x] = true;
+					var newEntity = Crafty.e('SandDune').at(x,y);
+					occupied[y][x] = {type: 'SandDune', id: newEntity[0]};
+					allObjects.push(occupied[y][x]);
 				}
 			}
 		}
@@ -137,10 +145,10 @@ function randomlyPopulateNextSection(x, y, start, end, playerx, playery) {
 		for (y = 0; y < mapArray.length; y++) {
 			for (x = start; x < end; x++) {
 				if (!occupied[y][x] && Math.random() < 0.01 && x !== playerx && y !== playery) {
-				// Place a bush entity at the current tile
 					i++;
-					Crafty.e('SandDune').at(x,y);
-					occupied[y][x] = true;
+					var newEntity = Crafty.e('SandDune').at(x,y);
+					occupied[y][x] = {type: 'SandDune', id: newEntity[0]};
+					allObjects.push(occupied[y][x]);
 				}
 			}
 		}
