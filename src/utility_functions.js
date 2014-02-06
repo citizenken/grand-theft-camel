@@ -2,18 +2,55 @@ function randomBetween(low, high) {
 	return Math.floor(Crafty.math.randomNumber(low, high));
 }
 
-function convertMap(map, width, height) {
+function convertMap(map) {
 	var mapArray = [];
 	for (var x = 0; x < map.length; x++) {
-		mapArray[x] = map[x].split("");
+		mapArray[x] = map[x].split('');
 	}
-	parsemap(mapArray)
+	var seams = findSeams();
+	parsemap(mapArray, seams);
+
 }
 
-function parsemap (mapArray) {
+function findSeams () {
+	var divisions = 2;
+	var xSeamCount = Game.map_grid.width/(Game.map_grid.width/divisions);
+	var ySeamCount = Game.map_grid.height/(Game.map_grid.height/divisions);
+	var xSeams = [];
+	var ySeams = [];
+	var zones = {x:[], y:[]};
+	for (var x = 0; x <= xSeamCount; x++) {
+		if (x === 0) {
+			xSeams.push(x);
+		} else {
+			xSeams.push((Game.map_grid.width/divisions) * x);
+		}
+		if (x === xSeamCount) {
+			for (var i = 0; i < xSeams.length - 1; i++) {
+				zones.x.push({xzone: i, xmin: xSeams[i], xmax: xSeams[i + 1]});
+			}
+		}
+	}
+
+	for (var y = 0; y <= ySeamCount; y++) {
+		if (y === 0) {
+			ySeams.push(y);
+		} else {
+			ySeams.push((Game.map_grid.height/divisions) * y);
+		}
+		if (y === ySeamCount) {
+			for (var z = 0; z < ySeams.length - 1; z++) {
+				zones.y.push({yzone: z, ymin: ySeams[z], ymax: ySeams[z + 1]});
+			}
+		}
+	}
+	Game.currentMap.zones = zones;
+	Game.currentMap.seams = {x: xSeams, y: ySeams};
+	return {xSeams: xSeams, ySeams: ySeams};
+}
+
+function parsemap (mapArray, seams) {
 	var occupiedSquares = [];
-	var xLinesAt = [];
-	var yLinesAt = [0];
 	for (var y = 0; y < mapArray.length; y++) {
 		occupiedSquares[y] = [];
 		for(var x = 0; x < mapArray[y].length; x++) {
@@ -48,30 +85,15 @@ function parsemap (mapArray) {
 					Game.player = Crafty.e('WhiteCharacter, Player').at(x,y);
 				break;
 				default:
-					if ((y % (Game.map_grid.height/2) === 0) || (x % (Game.map_grid.width/2) === 0) || x === (Game.map_grid.width - 1) || y === (Game.map_grid.height - 1)) {
-						var newVoid = Crafty.e('Void').at(x,y);
+					if (seams.xSeams.indexOf(x) > -1 || seams.ySeams.indexOf(y) > -1) {
+						Crafty.e('Void').at(x,y);
 						occupiedSquares[y][x] = 'void';
-						if ((x % (Game.map_grid.width/2) === 0) || x === (Game.map_grid.width - 1)) {
-							if (xLinesAt.indexOf(x) === -1) {
-								xLinesAt.push(x);
-							}
-							newVoid._onEdge = {x:xLinesAt[xLinesAt.indexOf(x)], y:null, start:x, end:x + (Game.map_grid.width/2)};
-						}
-						if ((y % (Game.map_grid.height/2) === 0) || y === (Game.map_grid.height - 1)) {
-							if (yLinesAt.indexOf(y) === -1) {
-								yLinesAt.push(y);
-							}
-							newVoid._onEdge = {x:null, y:yLinesAt[yLinesAt.indexOf(y)], start:y, end:y + (Game.map_grid.height/2)};
-						}
-
-					} else {
-						occupiedSquares[y][x] = false;
 					}
 				break;
 			}
 		}
 	}
-	Game.currentMap = mapArray;
+	Game.currentMap.map = mapArray;
 	Game.currentMap.occupiedSquares = occupiedSquares;
 }
 
@@ -118,12 +140,30 @@ function changeMap (direction) {
 	return;
 }
 
-function randomlyPopulateNextSection(x, y, start, end, playerx, playery) {
+function randomlyPopulateNextSection(direction, currentZoneX, currentZoneY) {
+	var nextZoneX = null;
+	var nextZoneY = null;
+	console.log(direction);
+	console.log(currentZoneY);
+	switch (direction)
+	{
+	case 'UP':
+		break;
+	case 'DOWN':
+		break;
+	case 'LEFT':
+			// this.animate('PlayerLeft', -1)
+		break;
+	case 'RIGHT':
+			nextZoneX = currentZoneX + 1;
+			nextZoneY = currentZoneY;
+		break;
+	}
 	var mapArray = Game.currentMap;
 	var occupied = Game.currentMap.occupiedSquares;
 	var i;
 	if (y) {
-		for (y = y; y < end; y++) {
+		for (y = y; y < Game.currentMap.zones.y[nextZoneY].ymax; y++) {
 			for (x = 0; x < mapArray[y].length; x++) {
 				if (!occupied[y][x] && Math.random() < 0.01 && x !== playerx && y !== playery) {
 				// Place a bush entity at the current tile
