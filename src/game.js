@@ -26,13 +26,13 @@ var Game = {
 	playerLocation: Object,
 	enemies: [],
 	worldMap: null,
-	currentMap: {x:0, y:0},
+	currentMap: {map: null, occupiedSquares: null, zones: null},
 	//initialize and start game
 	start: function() {
 		//Start crafty and set background color
 		Crafty.init(Game.width(), Game.height());
 		Crafty.background('tan');
-		Game.worldMap = createWorldMap();
+		// Game.worldMap = createWorldMap();
 
 		Game.playerKeys = [];
 		Game.playerKeys.M = false;

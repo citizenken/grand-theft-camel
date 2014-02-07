@@ -4,6 +4,7 @@
 		_selected_weapon: null,
 		_previousLocation: null,
 		_currentLocation: null,
+		_currentZone: {x:null, y:null},
 		_nextLocation: null,
 		_hitPoints: 5,
 		_justTriggeredScene: false,
@@ -21,7 +22,6 @@
 				.reel('PlayerSwordLeft', 200, 0, 4, 5)
 				.reel('PlayerSwordDown', 200, 0, 6, 5)
 				.bind('EnterFrame', function(data) {
-					// console.log(data);
 					this.checkDead();
 				})
 				.bind('KeyDown', function(e) {
@@ -76,30 +76,10 @@
 				})
 				.onHit('Void', function(data) {
 					var voidObject = data[0].obj;
-					// console.log(Game.currentMap);
 					if (this.x === voidObject.x || this.y === voidObject.y) {
 						if (this._justTriggeredScene === false) {
 							this._justTriggeredScene = true;
-							var edge = voidObject._onEdge;
-							console.log(edge);
-							switch (this._direction)
-							{
-								case 'UP':
-										// randomlyPopulateNextSection(edge.x, edge.y, edge.start, edge.end, this.x, this.y);
-									break;
-								case 'DOWN':
-										randomlyPopulateNextSection(edge.x, edge.y, edge.start, edge.end, this.x, this.y);
-									break;
-								case 'LEFT':
-										// randomlyPopulateNextSection(edge.x, edge.y, edge.start, edge.end, this.x, this.y);
-									break;
-								case 'RIGHT':
-										randomlyPopulateNextSection(edge.x, edge.y, edge.start, edge.end, this.x, this.y);
-									break;
-							}
-/*							randomlyPopulateNextSection(x, y, start, end, playerx, playery)
-							onsole.log(voidObject._onEdge);*/
-
+							randomlyPopulateNextSection(this._direction, this._currentZone, Math.floor(this.at().x), Math.floor(this.at().y));
 						}
 					}
 
@@ -128,7 +108,7 @@
 					this._previousLocation = data;
 					this._currentLocation = {x:this.x, y:this.y};
 					this._nextLocation = {x:this.x + this._movement.x, y:this.y + this._movement.y};
-
+					this.checkZone();
 				})
 				.bind('NewDirection', function(data) {
 					if (data.y === -1 || data === 'UP') {
@@ -148,6 +128,22 @@
 						this.reelPosition(1);
 					}
 				});
+		},
+
+		checkZone: function () {
+			var zone = Game.currentMap.zones;
+			for (var x = 0; x < zone.x.length; x++) {
+				if (Math.floor(this.at().x) > zone.x[x].xmin  && Math.floor(this.at().x) < zone.x[x].xmax) {
+					this._currentZone.x = zone.x[x].xzone;
+					break;
+				}
+			}
+			for (var y = 0; y < zone.y.length; y++) {
+				if (Math.floor(this.at().y) > zone.y[y].ymin  && Math.floor(this.at().y) < zone.y[y].ymax) {
+					this._currentZone.y = zone.y[y].yzone;
+					break;
+				}
+			}
 		},
 
 		mount: function(data) {
