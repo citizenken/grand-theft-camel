@@ -58,7 +58,7 @@
 
 	Crafty.c('SandDune', {
 		init: function() {
-		this.requires('Scenery, Color')
+		this.requires('Actor, Color')
 		  .color('white');
 		},
 	});
