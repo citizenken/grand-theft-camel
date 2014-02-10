@@ -6,13 +6,14 @@ Crafty.c('Player', {
 	_currentLocation: null,
 	_currentZone: {x:null, y:null},
 	_nextLocation: null,
-	_hitPoints: 10,
+	_hitPoints: 30,
 	_justTriggeredScene: false,
 	_moveSpeed: 1,
-	_thirst: 25,
+	_thirst: 30,
 	_playerHUD: null,
 	_followers: [1,1,1,1,1,1,1,1],
 	_tradeItems: ['fig', 'incense', 'mur'],
+	_money: 000000000000,
 	init: function() {
 		this.requires('Actor, Fourway, Collision, Delay, FPS, Persist, Solid')
 			._playerHUD = Crafty.e('HUD');
@@ -74,7 +75,7 @@ Crafty.c('Player', {
 			})
 			.onHit('Well', function() {
 				if (Game.playerKeys.E) {
-					this._thirst = 25;
+					this._thirst = 30;
 				}
 			})
 			.onHit('SandDune', function(data) {
@@ -176,8 +177,9 @@ Crafty.c('Player', {
 	updateHUD: function () {
 		if (this._playerHUD) {
 			var hud = this._playerHUD;
-			hud._hpBar.text(this._hitPoints * 10);
-			hud._thirstBar.text(this._thirst * 4);
+			hud._hpBar.w = this._hitPoints * 2;
+			hud._thirstBar.w = this._thirst * 2;
+			hud._money.text(this._money);
 		}
 		if (hud._tradeItems) {
 			for (var x = 0; x < this._tradeItems.length; x++) {
@@ -285,37 +287,29 @@ Crafty.c('HUD', {
 	},
 
 	createHpBar: function () {
-		var heart = Crafty.e('HUDElement, Color').color('red').attr({x:10, y:10, w:12, h:15});
+		// var heart = Crafty.e('HUDElement, Color').color('red').attr({x:10, y:10, w:12, h:15});
 		this._hpBar = Crafty.e('HUDElement, Color, Text');
-		this._hpBar.attr({x:23, y:10});//, h:10, w:0
-		this._hpBar.text();
-		this._hpBar.textFont({ size: '16px', weight: 'bold' });
-		this._hpBar.textColor('#E50000');
-		// this._hpBar.color('red');
+		this._hpBar.attr({x:45, y:10, h:10, w:0});
+		this._hpBar.color('red');
 	},
 
 	createThirstBar: function () {
-		var waterdrop = Crafty.e('HUDElement, Color').color('blue').attr({x:53, y:10, w:12, h:15});
+		// var waterdrop = Crafty.e('HUDElement, Color').color('blue').attr({x:53, y:10, w:12, h:15});
 		this._thirstBar = Crafty.e('HUDElement, Color, Text');
-		this._thirstBar.attr({x:67, y:10});//, h:10, w:0
-		this._thirstBar.text();
-		this._thirstBar.textFont({ size: '16px', weight: 'bold' });
-		this._thirstBar.textColor('#0000CC');
-		// this._thirstBar.attr({x:10, y:20, h:10, w:0});
+		this._thirstBar.attr({x:45, y:25, h:10, w:0});
+		this._thirstBar.color('blue');
 	},
 
 
 	createSelectedWeapon: function () {
 		this._selectedWeapon = Crafty.e('HUDElement, Color');
-		this._selectedWeapon.attr({x:120, y:10, h:25, w:25});
+		this._selectedWeapon.attr({x:10, y:10, h:25, w:25});
 		this._selectedWeapon.css({'border':'solid black 2px', 'border-radius': '5px'})
-		var text = Crafty.e('HUDElement, Text').text('Weapon goes here');
-		text.attr({x:123, y:10, h:32, w:32});
 	},
 
 	createTradeItemsContainer: function () {
 		this._tradeItemsContainer = Crafty.e('HUDElement, Color');
-		this._tradeItemsContainer.attr({x:10, y:35, h:24, w:96});
+		this._tradeItemsContainer.attr({x:10, y:42, h:24, w:92});
 		this._tradeItemsContainer.css({'border':'solid black 2px', 'border-radius': '5px'})
 		this.createTradeItems()
 	},
@@ -327,20 +321,26 @@ Crafty.c('HUD', {
 				var item = Crafty.e('HUDElement, Color, Mouse');
 				// item.color('gray')
 				item.css({'border':'solid black 2px', 'border-radius': '5px'})
-				item.attr({x:15 + (20 * x), y:39, h:15, w:15});
+				item.attr({x:15 + (20 * x), y:47, h:15, w:15});
 				item._type = this._tradeItems[x];
 				item.bind('Click', function() {
 					console.log(this)
 				})
 				itemArray.push(item._type);
+				this.attach(item);
 			}
 			this._tradeItems = itemArray;
 		}
 	},
 
 	money: function () {
-		this.money = Crafty.e('HUDElement, Color');
-		this.money.color('black');
-		this.money.attr({x:290, y:10, h:37, w:37});
+		var gold = Crafty.e('HUDElement, Color, Text');
+		gold.attr({x:10, y:72});
+		gold.text('Gold');
+		gold.textFont({size: '12px', weight: 'bold'});
+		this._money = Crafty.e('HUDElement, Color, Text');
+		this._money.attr({x:50, y:72});
+		this._money.textColor('#007F00');
+		this._money.textFont({size: '12px', weight: 'bold'});
 	}
 })
