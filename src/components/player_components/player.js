@@ -79,7 +79,7 @@ Crafty.c('Player', {
 				}
 			})
 			.onHit('SandDune', function(data) {
-				console.log(this._z, data[0].obj._z)
+				console.log(this._z, data[0].obj._z);
 				this.fourway(this._moveSpeed/2);
 			}, function () {
 				this.fourway(this._moveSpeed);
@@ -175,21 +175,13 @@ Crafty.c('Player', {
 	},
 
 	updateHUD: function () {
-		if (this._playerHUD) {
-			var hud = this._playerHUD;
+		var hud = this._playerHUD;
+		if (hud) {
 			hud._hpBar.w = this._hitPoints * 2;
 			hud._thirstBar.w = this._thirst * 2;
 			hud._money.text(this._money);
 		}
-		if (hud._tradeItems) {
-			for (var x = 0; x < this._tradeItems.length; x++) {
-				if (hud._tradeItems.indexOf(this._tradeItems[x]) === -1) {
-					console.log('test')
-					hud._tradeItems = this._tradeItems;
-					hud.createTradeItems();
-				}
-			}
-		} else {
+		if (this._tradeItems.join() !== hud._tradeItems.join()) {
 			hud._tradeItems = this._tradeItems;
 			hud.createTradeItems();
 		}
@@ -275,15 +267,17 @@ Crafty.c('HUD', {
 	_money: null,
 	_selectedWeapon: null,
 	_tradeItemsContainer: null,
-	_tradeItems: null,
+	_tradeItems: ['cat','rat','ball'],
+	_tradeItemsEntities: [],
 	init: function () {
 		this.requires('HUDElement');
 		// this.attr({x:10, y:10, h:30, w:0});
 		this.createHpBar();
 		this.createThirstBar();
 		this.money();
-		this.createSelectedWeapon()
-		this.createTradeItemsContainer()
+		this.createSelectedWeapon();
+		this.createTradeItemsContainer();
+		this.createTradeItems();
 	},
 
 	createHpBar: function () {
@@ -304,32 +298,30 @@ Crafty.c('HUD', {
 	createSelectedWeapon: function () {
 		this._selectedWeapon = Crafty.e('HUDElement, Color');
 		this._selectedWeapon.attr({x:10, y:10, h:25, w:25});
-		this._selectedWeapon.css({'border':'solid black 2px', 'border-radius': '5px'})
+		this._selectedWeapon.css({'border':'solid black 2px', 'border-radius': '5px'});
 	},
 
 	createTradeItemsContainer: function () {
 		this._tradeItemsContainer = Crafty.e('HUDElement, Color');
 		this._tradeItemsContainer.attr({x:10, y:42, h:24, w:92});
-		this._tradeItemsContainer.css({'border':'solid black 2px', 'border-radius': '5px'})
-		this.createTradeItems()
+		this._tradeItemsContainer.css({'border':'solid black 2px', 'border-radius': '5px'});
 	},
 
 	createTradeItems: function () {
-		if (this._tradeItems) {
-			var itemArray = [];
-			for (x = 0; x < this._tradeItems.length; x++) {
-				var item = Crafty.e('HUDElement, Color, Mouse');
-				// item.color('gray')
-				item.css({'border':'solid black 2px', 'border-radius': '5px'})
-				item.attr({x:15 + (20 * x), y:47, h:15, w:15});
-				item._type = this._tradeItems[x];
-				item.bind('Click', function() {
-					console.log(this)
-				})
-				itemArray.push(item._type);
-				this.attach(item);
-			}
-			this._tradeItems = itemArray;
+		var itemArray = [];
+		for (var x = 0; x < this._tradeItemsEntities.length; x++){
+			Crafty(this._tradeItemsEntities[x][0]).destroy();
+		}
+		for (x = 0; x < this._tradeItems.length; x++) {
+			var item = Crafty.e('HUDElement, Color, Mouse');
+			// item.color('gray')
+			item.css({'border':'solid black 2px', 'border-radius': '5px'});
+			item.attr({x:15 + (20 * x), y:47, h:15, w:15});
+			item._type = this._tradeItems[x];
+			item.bind('Click', function() {
+				console.log(this);
+			})
+			this._tradeItemsEntities.push(item);
 		}
 	},
 
