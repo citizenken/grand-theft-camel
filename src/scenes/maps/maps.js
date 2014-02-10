@@ -1,6 +1,6 @@
 var openDesertSection00 = [
-'oooooooooooooooooooooooooooooo',
-'#o#o#o#o#o#o#o#o#o#o#o#o#o#o#o',
+'############oooooooooooooooooo',
+'#############o#o#o#o#o#o#o#o#o',
 '##############################',
 '##############################',
 '############w#################',
@@ -16,7 +16,7 @@ var openDesertSection00 = [
 '##############################',
 '##############################',
 '##############################',
-'#oooooooooooooooooooooooooooo#'];
+'#ooooooooooo##########ooooooo#'];
 
 var openDesertSection01 = [
 'oooooooooooooooooooooooooooooo',

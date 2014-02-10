@@ -121,8 +121,7 @@ Crafty.c('PauseBox', {
 
 Crafty.c('Void', {
 	init: function() {
-		this.requires('Grid, Tint');
-		this.tint('#969696', 0.3);
+		this.requires('Actor');
 	}
 })
 
