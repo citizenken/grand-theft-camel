@@ -309,14 +309,16 @@ Crafty.c('HUD', {
 
 	createTradeItems: function () {
 		var itemArray = [];
-		for (var x = 0; x < this._tradeItemsEntities.length; x++){
-			Crafty(this._tradeItemsEntities[x][0]).destroy();
-		}
-		for (x = 0; x < this._tradeItems.length; x++) {
+		for (var x = 0; x < this._tradeItems.length; x++) {
+			if (this._tradeItemsEntities[x]) {
+				console.log(this._tradeItemsEntities[x][0]);
+				console.log(Crafty(this._tradeItemsEntities[x][0]));
+				Crafty(this._tradeItemsEntities[x][0]).destroy();
+			}
 			var item = Crafty.e('HUDElement, Color, Mouse');
 			// item.color('gray')
 			item.css({'border':'solid black 2px', 'border-radius': '5px'});
-			item.attr({x:15 + (20 * x), y:47, h:15, w:15});
+			item.attr({x:this._tradeItemsContainer.x + 5 + (20 * x), y:this._tradeItemsContainer.y + 5, h:15, w:15});
 			item._type = this._tradeItems[x];
 			item.bind('Click', function() {
 				console.log(this);
