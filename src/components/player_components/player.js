@@ -43,6 +43,34 @@ Crafty.c('Player', {
 						Game.playerKeys['/'] = true;
 						this.changeWeapon();
 						break;
+					case Crafty.keys['1']:
+						Game.playerKeys['1'] = true;
+						this.selectItem(0);
+						break;
+					case Crafty.keys['2']:
+						Game.playerKeys['2'] = true;
+						this.selectItem(1);
+						break;
+					case Crafty.keys['3']:
+						Game.playerKeys['3'] = true;
+						this.selectItem(2);
+						break;
+					case Crafty.keys['3']:
+						Game.playerKeys['3'] = true;
+						this.selectItem(2);
+						break;
+					case Crafty.keys.T:
+						Game.playerKeys.T = true;
+						var items = Game.player._playerHUD._tradeItemsEntities;
+						var selectedItem = items.indexOf(Crafty('SelectedItem'));
+						this._tradeItems[selectedItem] = null;
+						items[selectedItem].removeComponent('SelectedItem')
+						items[selectedItem].css({
+			                border: 'solid black 2px',
+			                'border-radius': '5px'
+			            });
+			            this.updateItems(Game.player._playerHUD)
+						break;
 				}
 			})
 			.bind('KeyUp', function(e) {
@@ -174,6 +202,22 @@ Crafty.c('Player', {
 		Crafty('WhiteCharacter').destroy();
 	},
 
+	selectItem: function(itemNumber) {
+		var items = this._playerHUD._tradeItemsEntities;
+        for (var i = 0; i < items.length;i++) {
+            items[i].removeComponent('SelectedItem');
+	        items[i].css({
+                border: 'solid black 2px',
+                'border-radius': '5px'
+            });
+        }
+        items[itemNumber].addComponent('SelectedItem');
+/*        items[itemNumber].css({
+            border: 'solid red 2px',
+            'border-radius': '5px'
+        });*/
+	},
+
 	updateHUD: function () {
 		var hud = this._playerHUD;
 		if (hud) {
@@ -181,20 +225,35 @@ Crafty.c('Player', {
 			hud._thirstBar.w = this._thirst * 2;
 			hud._money.text(this._money);
 			if (this._tradeItems.join() !== hud._tradeItems.join()) {
-				hud._tradeItems = this._tradeItems;
-				for (var x = 0; x <= 2; x++) {
-					if(hud._tradeItems[x]) {
-						Crafty(hud._tradeItemsEntities[x][0]).addComponent(hud._tradeItems[x]);
-					} else {
-						console.log(hud._tradeItems[x])
-						Crafty(hud._tradeItemsEntities[x][0]).removeComponent('Gold', false);
-						console.log(Crafty(hud._tradeItemsEntities[x][0]).draw())
-					}
-				}
+				console.log('blah')
+				this.updateItems(hud);
 			}
 		}
+	},
+
+	updateItems: function(hud) {
+		console.log('updating');
+		for (var x = 0; x <= 2; x++) {
+			console.log(this._tradeItems[x], hud._tradeItems[x]);
+			var currentEntity = Crafty(hud._tradeItemsEntities[x][0]);
+			if (this._tradeItems[x] && !currentEntity.has(this._tradeItems[x])) {
+				for (var i = 0; i < hud._possibleItems.length;i++) {
+					console.log('adding item ' + this._tradeItems[x])
+					if (currentEntity.has(hud._possibleItems[i])) {
+						currentEntity.removeComponent(hud._possibleItems[i]);
+					}
+				}
+				currentEntity.addComponent(this._tradeItems[x]);
+			} else if (!this._tradeItems[x] && currentEntity.has(hud._tradeItems[x])) {
+				console.log('removing item ' + this._tradeItems[x])
+				currentEntity.removeComponent(hud._tradeItems[x]);
+				currentEntity._color = 'none';
+				currentEntity._element.style.backgroundColor = null;
+			}
+		}
+		hud._tradeItems = this._tradeItems;
 	}
-})
+});
 
 Crafty.c('WhiteCharacter', {
 	init: function () {
@@ -207,7 +266,7 @@ Crafty.c('WhiteCharacter', {
 		.reel('PlayerSwordLeft', 200, 0, 4, 5)
 		.reel('PlayerSwordDown', 200, 0, 6, 5)
 		.bind('AnimationEnd', function(data) {
-			if (data.id == 'PlayerSwordRight' || data.id == 'PlayerSwordLeft') {
+			if (data.id === 'PlayerSwordRight' || data.id === 'PlayerSwordLeft') {
 				switch (this._direction)
 				{
 					case 'UP':
@@ -260,4 +319,4 @@ Crafty.c('WhiteCharacter', {
 			actor._hitPoints -= 1;
 		}
 	}
-})
+});
