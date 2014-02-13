@@ -188,7 +188,7 @@ Crafty.c('Player', {
 					} else {
 						console.log(hud._tradeItems[x])
 						Crafty(hud._tradeItemsEntities[x][0]).removeComponent('Gold', false);
-						console.log(Crafty(hud._tradeItemsEntities[x][0]).draw())
+						console.log(Crafty(hud._tradeItemsEntities[x][0]))
 					}
 				}
 			}
