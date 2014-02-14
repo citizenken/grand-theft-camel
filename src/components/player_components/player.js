@@ -1,7 +1,7 @@
 Crafty.c('Player', {
 	_direction: null,
-	_weapons: ['sword'],
-	_selected_weapon: null,
+	_items: ['sword', 'sling', 'waterJug'],
+	_activeItem: 'sword',
 	_previousLocation: null,
 	_currentLocation: null,
 	_currentZone: {x:null, y:null},
@@ -9,7 +9,7 @@ Crafty.c('Player', {
 	_hitPoints: 30,
 	_justTriggeredScene: false,
 	_moveSpeed: 1,
-	_thirst: 30,
+	_thirst: 0,
 	_playerHUD: null,
 	_followers: [1,1,1,1,1,1,1,1],
 	_tradeItems: ['Gold', 'Gold', 'Gold'],
@@ -32,32 +32,32 @@ Crafty.c('Player', {
 					case Crafty.keys.R:
 						this.fourway(this._moveSpeed * 4);
 						break;
-					case Crafty.keys.U:
-						Game.playerKeys.U = true;
+					case Crafty.keys['SPACE']:
+						Game.playerKeys['SPACE'] = true;
 						this.attack();
 						break;
 					case Crafty.keys.E:
 						Game.playerKeys.E = true;
 						break;
-					case Crafty.keys['/']:
-						Game.playerKeys['/'] = true;
+					case Crafty.keys.Y:
+						Game.playerKeys.Y = true;
 						this.changeWeapon();
 						break;
 					case Crafty.keys['1']:
 						Game.playerKeys['1'] = true;
-						this.selectItem(0);
+						this.selectTradeItem(0);
 						break;
 					case Crafty.keys['2']:
 						Game.playerKeys['2'] = true;
-						this.selectItem(1);
+						this.selectTradeItem(1);
 						break;
 					case Crafty.keys['3']:
 						Game.playerKeys['3'] = true;
-						this.selectItem(2);
+						this.selectTradeItem(2);
 						break;
 					case Crafty.keys['3']:
 						Game.playerKeys['3'] = true;
-						this.selectItem(2);
+						this.selectTradeItem(2);
 						break;
 					case Crafty.keys.T:
 						Game.playerKeys.T = true;
@@ -69,9 +69,6 @@ Crafty.c('Player', {
 			                'border-radius': '5px'
 			            });
 						this._tradeItems[selectedItem] = null;
-						// console.log(this._tradeItems, this._playerHUD._tradeItems)
-						// console.log(this._tradeItems.join() !== this._playerHUD._tradeItems.join())
-			            // this.updateItems(Game.player._playerHUD)
 						break;
 				}
 			})
@@ -87,25 +84,9 @@ Crafty.c('Player', {
 					case Crafty.keys.E:
 						Game.playerKeys.E = false;
 						break;
-					case Crafty.keys.U:
-						Game.playerKeys.U = false;
+					case Crafty.keys['SPACE']:
+						Game.playerKeys['SPACE'] = false;
 						break;
-				}
-			})
-			.onHit('Void', function(data) {
-				var voidObject = data[0].obj;
-				if (this.x === voidObject.x || this.y === voidObject.y) {
-					if (this._justTriggeredScene === false) {
-						this._justTriggeredScene = true;
-						changeMap(this._direction);
-						this._justTriggeredScene = false;
-					}
-				}
-
-			})
-			.onHit('Well', function() {
-				if (Game.playerKeys.E) {
-					this._thirst = 30;
 				}
 			})
 			.onHit('SandDune', function(data) {
@@ -114,24 +95,19 @@ Crafty.c('Player', {
 			}, function () {
 				this.fourway(this._moveSpeed);
 			})
-			.onHit('Scenery', function(data) {
+			.onHit('Actor', function(data) {
 				var hitObject = data[0].obj;
-				if (hitObject.has('Scenery')) {
-					if (this.steps > 0) {
-						this.steps = 0;
-					}
-					this._speed = 0;
-					if (this._movement) {
-					  this.x -= this._movement.x;
-					  this.y -= this._movement.y;
-					}
-				}
-			})
-			.onHit('Camel', function(data) {
-				var hitObject = data[0].obj;
-				if (Game.playerKeys.M && hitObject.has('Camel')) {
-					this.mount(data);
-				}
+				var hitObjectType;
+                if (hitObject.has('Void')) {
+                    hitObjectType = 'Void';
+                } else if (hitObject.has('Well')) {
+                    hitObjectType = 'Well';
+                } else if (hitObject.has('Scenery')) {
+                    hitObjectType = 'Scenery';
+                } else if (hitObject.has('Camel')) {
+                    hitObjectType = 'Camel';
+                }
+                this.collisionHandler(hitObjectType, hitObject);
 			})
 			.bind('Moved', function(data) {
 				this._previousLocation = data;
@@ -149,16 +125,71 @@ Crafty.c('Player', {
 					this._direction = 'LEFT';
 				}
 			});
-			this.delay(function () {
-				if (this._movement.x !== 0 || this._movement.y !== 0 && this._thirst > 0) {
-					this._thirst -= 1;
-				} else if (this._thirst > 0) {
-					this._thirst -= 0.5;
-				} else if (this._hitPoints > 0) {
-					this._hitPoints -= 0.5;
-				}
-			}, 1000, -1)
+			this.delay(function() {this.addThirst();}, 1000, -1)
 	},
+
+    addThirst: function () {
+                if (this._movement.x !== 0 || this._movement.y !== 0 && this._thirst < 30) {
+                    this._thirst += 1;
+                } else if (this._thirst < 30) {
+                    this._thirst += 0.5;
+                } else if (this._hitPoints > 0) {
+                    this._hitPoints -= 0.5;
+                }
+    },
+
+    changeWeapon: function() {
+        var currentItem = this._items.indexOf(this._activeItem);
+        var nextItem = currentItem + 1;
+        if (nextItem < this._items.length) {
+            this._activeItem = this._items[nextItem];
+        } else {
+            this._activeItem = this._items[0];
+        }
+        console.log(this._activeItem)
+    },
+
+    collisionHandler: function(hitObjectType, hitObject) {
+        switch (hitObjectType) {
+            case 'Void':
+                if (this.x === hitObject.x || this.y === hitObject.y) {
+                    if (this._justTriggeredScene === false) {
+                        this._justTriggeredScene = true;
+                        changeMap(this._direction);
+                        this._justTriggeredScene = false;
+                    }
+                }
+            break;
+            case 'Well':
+                if (this.steps > 0) {
+                    this.steps = 0;
+                }
+                this._speed = 0;
+                if (this._movement) {
+                  this.x -= this._movement.x;
+                  this.y -= this._movement.y;
+                }
+                if (Game.playerKeys.E) {
+                    this._thirst = 0;
+                }
+            break;
+            case 'Scenery':
+                if (this.steps > 0) {
+                    this.steps = 0;
+                }
+                this._speed = 0;
+                if (this._movement) {
+                  this.x -= this._movement.x;
+                  this.y -= this._movement.y;
+                }
+            break;
+            case 'Camel':
+                if (Game.playerKeys.M) {
+                    this.mount(data);
+                }
+            break;                        
+        }
+    },
 
 	checkAdjacent: function() {
 		var currentSquare = {x:Math.floor(this.at().x), y:Math.floor(this.at().y)};
@@ -204,20 +235,26 @@ Crafty.c('Player', {
 		Crafty('WhiteCharacter').destroy();
 	},
 
-	selectItem: function(itemNumber) {
+	selectTradeItem: function(itemNumber) {
 		var items = this._playerHUD._tradeItemsEntities;
-        for (var i = 0; i < items.length;i++) {
-            items[i].removeComponent('SelectedItem');
-	        items[i].css({
+	    if (!items[itemNumber].has('SelectedItem')) {
+	        for (var i = 0; i < items.length;i++) {
+	            items[i].removeComponent('SelectedItem');
+		        items[i].css({
+	                border: 'solid black 2px',
+	                'border-radius': '5px'
+	            });
+	        }
+	        if (!items[itemNumber].has('EmptyItem')) {
+                items[itemNumber].toggleComponent('SelectedItem');
+	        }
+	    } else {
+            items[itemNumber].toggleComponent('SelectedItem');
+            items[itemNumber].css({
                 border: 'solid black 2px',
                 'border-radius': '5px'
             });
-        }
-        items[itemNumber].addComponent('SelectedItem');
-/*        items[itemNumber].css({
-            border: 'solid red 2px',
-            'border-radius': '5px'
-        });*/
+	    }
 	},
 
 	updateHUD: function () {
@@ -226,33 +263,31 @@ Crafty.c('Player', {
 			hud._hpBar.w = this._hitPoints * 2;
 			hud._thirstBar.w = this._thirst * 2;
 			hud._money.text(this._money);
-			// if (this._tradeItems.join() !== hud._tradeItems.join()) {
-				// console.log('blah')
+			if (this._tradeItems.join() !== hud._tradeItems.join()) {
 				this.updateItems(hud);
-			// }
+			}
 		}
 	},
 
 	updateItems: function(hud) {
-		// console.log('updating');
 		for (var x = 0; x < this._tradeItems.length; x++) {
 			var currentEntity = Crafty(hud._tradeItemsEntities[x][0]);
 			if (this._tradeItems[x] && !currentEntity.has(this._tradeItems[x])) {
 				for (var i = 0; i < hud._possibleItems.length;i++) {
-					// console.log('adding item ' + this._tradeItems[x])
 					if (currentEntity.has(hud._possibleItems[i])) {
 						currentEntity.removeComponent(hud._possibleItems[i]);
 					}
 				}
+				currentEntity.toggleComponent('EmptyItem');
 				currentEntity.addComponent(this._tradeItems[x]);
 			} else if ((this._tradeItems[x] === null) && currentEntity.has(hud._tradeItems[x])) {
-				console.log('removing item ' + this._tradeItems[x])
 				currentEntity.removeComponent(hud._tradeItems[x]);
+				currentEntity.toggleComponent('EmptyItem');
 				currentEntity._color = 'none';
 				currentEntity._element.style.backgroundColor = null;
 			}
 		}
-		hud._tradeItems = this._tradeItems;
+		hud._tradeItems = this._tradeItems.slice();
 	}
 });
 

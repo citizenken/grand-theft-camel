@@ -73,7 +73,7 @@ Crafty.c('HUD', {
     createTradeItems: function() {
         var itemArray = [];
         for (var x = 0; x < this._maxTradeItems; x++) {
-            var item = Crafty.e('HUDElement, Mouse, SelectedItem');
+            var item = Crafty.e('HUDElement, Mouse, EmptyItem');
             item._thisNum = x;
             item.css({
                 border: 'solid black 2px',

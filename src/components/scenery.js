@@ -37,9 +37,9 @@ Crafty.c('Tent', {
 
 Crafty.c('Well', {
 	init: function() {
-	this.requires('Scenery, spr_uncovered_well_32')
+	this.requires('Scenery, spr_uncovered_well_32');
 	},
-	});
+});
 
 Crafty.c('Mountain', {
 	init: function() {
