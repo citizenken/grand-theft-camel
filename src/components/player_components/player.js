@@ -63,13 +63,15 @@ Crafty.c('Player', {
 						Game.playerKeys.T = true;
 						var items = Game.player._playerHUD._tradeItemsEntities;
 						var selectedItem = items.indexOf(Crafty('SelectedItem'));
-						this._tradeItems[selectedItem] = null;
 						items[selectedItem].removeComponent('SelectedItem')
 						items[selectedItem].css({
 			                border: 'solid black 2px',
 			                'border-radius': '5px'
 			            });
-			            this.updateItems(Game.player._playerHUD)
+						this._tradeItems[selectedItem] = null;
+						// console.log(this._tradeItems, this._playerHUD._tradeItems)
+						// console.log(this._tradeItems.join() !== this._playerHUD._tradeItems.join())
+			            // this.updateItems(Game.player._playerHUD)
 						break;
 				}
 			})
@@ -224,27 +226,26 @@ Crafty.c('Player', {
 			hud._hpBar.w = this._hitPoints * 2;
 			hud._thirstBar.w = this._thirst * 2;
 			hud._money.text(this._money);
-			if (this._tradeItems.join() !== hud._tradeItems.join()) {
-				console.log('blah')
+			// if (this._tradeItems.join() !== hud._tradeItems.join()) {
+				// console.log('blah')
 				this.updateItems(hud);
-			}
+			// }
 		}
 	},
 
 	updateItems: function(hud) {
-		console.log('updating');
-		for (var x = 0; x <= 2; x++) {
-			console.log(this._tradeItems[x], hud._tradeItems[x]);
+		// console.log('updating');
+		for (var x = 0; x < this._tradeItems.length; x++) {
 			var currentEntity = Crafty(hud._tradeItemsEntities[x][0]);
 			if (this._tradeItems[x] && !currentEntity.has(this._tradeItems[x])) {
 				for (var i = 0; i < hud._possibleItems.length;i++) {
-					console.log('adding item ' + this._tradeItems[x])
+					// console.log('adding item ' + this._tradeItems[x])
 					if (currentEntity.has(hud._possibleItems[i])) {
 						currentEntity.removeComponent(hud._possibleItems[i]);
 					}
 				}
 				currentEntity.addComponent(this._tradeItems[x]);
-			} else if (!this._tradeItems[x] && currentEntity.has(hud._tradeItems[x])) {
+			} else if ((this._tradeItems[x] === null) && currentEntity.has(hud._tradeItems[x])) {
 				console.log('removing item ' + this._tradeItems[x])
 				currentEntity.removeComponent(hud._tradeItems[x]);
 				currentEntity._color = 'none';
