@@ -197,7 +197,8 @@ Crafty.c('Player', {
                 }
             break;
             case 'TradeItem':
-            	if (this._tradeItems.length < 3) {
+            console.log(this._tradeItems.length);
+                if (this._tradeItems.length < 3) {
             		this._tradeItems.push(hitObject._itemType);
             		hitObject.destroy();
             	}
