@@ -132,13 +132,3 @@ Crafty.c('Gold', {
         });
     }
 })
-
-Crafty.c('Fig', {
-    init: function() {
-        this.requires('Color');
-        this.color('brown');
-        this.bind('Click', function() {
-            console.log(this);
-        });
-    }
-})

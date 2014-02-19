@@ -12,7 +12,7 @@ Crafty.c('Player', {
 	_thirst: 0,
 	_playerHUD: null,
 	_followers: [1,1,1,1,1,1,1,1],
-	_tradeItems: ['Gold', 'Gold', 'Gold'],
+	_tradeItems: [],
 	_money: 000000000000,
 	init: function() {
 		this.requires('Actor, Fourway, Collision, Delay, FPS, Persist, Solid')
@@ -63,12 +63,14 @@ Crafty.c('Player', {
 						Game.playerKeys.T = true;
 						var items = Game.player._playerHUD._tradeItemsEntities;
 						var selectedItem = items.indexOf(Crafty('SelectedItem'));
-						items[selectedItem].removeComponent('SelectedItem')
-						items[selectedItem].css({
-			                border: 'solid black 2px',
-			                'border-radius': '5px'
-			            });
-						this._tradeItems[selectedItem] = null;
+						if (selectedItem > -1) {
+							items[selectedItem].removeComponent('SelectedItem')
+							items[selectedItem].css({
+				                border: 'solid black 2px',
+				                'border-radius': '5px'
+				            });
+							this._tradeItems[selectedItem] = null;
+						}
 						break;
 				}
 			})
@@ -91,9 +93,13 @@ Crafty.c('Player', {
 			})
 			.onHit('SandDune', function(data) {
 				console.log(this._z, data[0].obj._z);
-				this.fourway(this._moveSpeed/2);
+				if (this._speed.x == this._moveSpeed || this._speed.y == this._moveSpeed) {
+					this.fourway(this._moveSpeed/2);
+				}
 			}, function () {
-				this.fourway(this._moveSpeed);
+				if (this._speed.x == this._moveSpeed/2 || this._speed.y == this._moveSpeed/2) {
+					// this.fourway(this._moveSpeed);
+				}
 			})
 			.onHit('Actor', function(data) {
 				var hitObject = data[0].obj;
@@ -106,6 +112,8 @@ Crafty.c('Player', {
                     hitObjectType = 'Scenery';
                 } else if (hitObject.has('Camel')) {
                     hitObjectType = 'Camel';
+                } else if (hitObject.has('TradeItem')) {
+                    hitObjectType = 'TradeItem';
                 }
                 this.collisionHandler(hitObjectType, hitObject);
 			})
@@ -187,7 +195,13 @@ Crafty.c('Player', {
                 if (Game.playerKeys.M) {
                     this.mount(data);
                 }
-            break;                        
+            break;
+            case 'TradeItem':
+            	if (this._tradeItems.length < 3) {
+            		this._tradeItems.push(hitObject._itemType);
+            		hitObject.destroy();
+            	}
+            break;
         }
     },
 

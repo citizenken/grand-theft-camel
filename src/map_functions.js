@@ -66,6 +66,13 @@ function parsemap (mapArray, edges) {
 						var newEntity = Crafty.e('SandDune').at(x,y);
 						occupiedSquares[y][x] = {type: 'SandDune', id: newEntity[0]};
 						allObjects.push(occupiedSquares[y][x]);
+					} else if (!occupiedSquares[y][x] && randomBetween(0,200) === 1) {
+						var tradeItems = ['Fig', 'Silk', 'Incense'];
+						var randomTI = tradeItems[randomBetween(0,tradeItems.length)]
+						console.log(randomTI)
+						var newEntity = Crafty.e('Silk, TradeItem').at(x,y);
+						occupiedSquares[y][x] = {type: randomTI, id: newEntity[0]};
+						allObjects.push(occupiedSquares[y][x]);
 					}
 				break;
 			}
