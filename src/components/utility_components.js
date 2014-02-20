@@ -89,10 +89,17 @@ init: function() {
 	this.bind('KeyDown', function(e) {
 		if (e.key == Crafty.keys['ESC']) {
 			Crafty.pause();
+			console.log(Crafty.isPaused())
 		}
 	})
+	// console.log(Crafty.isPaused());
 	this.bind('Pause', function() {
-		// Crafty.e('PauseBox').draw();
+		if (Crafty('PauseMenu')) {
+			Crafty.e('PauseMenu');
+		}
+	})
+	this.bind('Unpause', function() {
+		// Crafty('PauseMenu').destroy();
 	})
 	this.attr({
 		w: Game.map_grid.tile.width,
@@ -111,11 +118,15 @@ if (x === undefined && y === undefined) {
 }
 });
 
-Crafty.c('PauseBox', {
+Crafty.c('PauseMenu', {
 	init: function() {
-		this.requires('2D, DOM, text, Color');
+		this.requires('2D, DOM, text, Color, Grid, Tint');
 		this.attr({x:(Game.map_grid.width/2), y:(Game.map_grid.height/2), w:200, h:200, z:50});
 		this.color('black');
+		var background = Crafty.e('2D, DOM, Color, Tint');
+		console.log(background);
+		background.attr({x: 0, y: 0, w:400, h:400})
+		background.tint("#969696", 0.3);
 	},
 });
 

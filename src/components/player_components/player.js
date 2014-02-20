@@ -69,10 +69,16 @@ Crafty.c('Player', {
 				                border: 'solid black 2px',
 				                'border-radius': '5px'
 				            });
+				            var droppedItem = Crafty.e(this._tradeItems[selectedItem] + ',TradeItem, Dropped');
+				            droppedItem.x = this.x;
+				            droppedItem.y = this.y;
 							this._tradeItems[selectedItem] = null;
 						}
 						break;
 				}
+			})
+			.onHit('Dropped', function() {}, function () {
+				Crafty('Dropped').removeComponent('Dropped');
 			})
 			.bind('KeyUp', function(e) {
 				switch (e.key)
@@ -112,7 +118,8 @@ Crafty.c('Player', {
                     hitObjectType = 'Scenery';
                 } else if (hitObject.has('Camel')) {
                     hitObjectType = 'Camel';
-                } else if (hitObject.has('TradeItem')) {
+                } else if (hitObject.has('TradeItem') && !hitObject.has('Dropped') ) {
+                	console.log('test')
                     hitObjectType = 'TradeItem';
                 }
                 this.collisionHandler(hitObjectType, hitObject);
@@ -197,9 +204,13 @@ Crafty.c('Player', {
                 }
             break;
             case 'TradeItem':
-            console.log(this._tradeItems.length);
+            // console.log(this._tradeItems.length);
                 if (this._tradeItems.length < 3) {
             		this._tradeItems.push(hitObject._itemType);
+            		hitObject.destroy();
+            	} else if (this._tradeItems.indexOf(null) > -1) {
+            		var nullSpace = this._tradeItems.indexOf(null);
+            		this._tradeItems[nullSpace] = hitObject._itemType;
             		hitObject.destroy();
             	}
             break;
