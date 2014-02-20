@@ -66,7 +66,7 @@ function parsemap (mapArray, edges) {
 						var newEntity = Crafty.e('SandDune').at(x,y);
 						occupiedSquares[y][x] = {type: 'SandDune', id: newEntity[0]};
 						allObjects.push(occupiedSquares[y][x]);
-					} else if (!occupiedSquares[y][x] && randomBetween(0,25) === 1) {
+					} else if (!occupiedSquares[y][x] && randomBetween(0,100) === 1) {
 						var tradeItems = ['Fig', 'Silk', 'Incense'];
 						var randomTI = tradeItems[randomBetween(0,tradeItems.length)]
 						var newEntity = Crafty.e(randomTI + ', TradeItem').at(x,y);

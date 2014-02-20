@@ -34,7 +34,7 @@ var Game = {
 		Crafty.init(Game.width(), Game.height());
 		Crafty.background('tan');
 		Game.worldMap = createWorldMap();
-		Crafty.settings.modify('autoPause', true)
+		// Crafty.settings.modify('autoPause', true)
 		Game.playerKeys = [];
 		Game.playerKeys.M = false;
 		Crafty.scene('Loading');
