@@ -10,17 +10,18 @@ Crafty.c('HUD', {
     _thirstBar: null,
     _camels: null,
     _money: null,
-    _selectedWeapon: null,
+    _activeItem: null,
+    _playerActiveItem: null,
     _tradeItemsContainer: null,
     _tradeItems: [],
     _tradeItemsEntities: [],
-    _possibleItems: ['Gold', 'Fig'],
+    _possibleItems: ['Silk', 'Fig', 'Incense'],
     init: function() {
         this.requires('HUDElement');
         this.createHpBar();
         this.createThirstBar();
         this.money();
-        this.createSelectedWeapon();
+        this.createActiveItem();
         this.createTradeItemsContainer();
         this.createTradeItems();
     },
@@ -44,15 +45,15 @@ Crafty.c('HUD', {
         });
         this._thirstBar.color('blue');
     },
-    createSelectedWeapon: function() {
-        this._selectedWeapon = Crafty.e('HUDElement, Color');
-        this._selectedWeapon.attr({
+    createActiveItem: function() {
+        this._activeItem = Crafty.e('HUDElement, Color');
+        this._activeItem.attr({
             x: 10,
             y: 10,
             h: 25,
             w: 25
         });
-        this._selectedWeapon.css({
+        this._activeItem.css({
             border: 'solid black 2px',
             'border-radius': '5px'
         });
@@ -113,7 +114,7 @@ Crafty.c('HUD', {
     }
 });
 
-Crafty.c('SelectedItem', {
+Crafty.c('SelectedTradeItem', {
     init: function() {
         this.requires('HUDElement');
         this.css({
@@ -128,7 +129,7 @@ Crafty.c('Gold', {
         this.requires('Color, Mouse');
         this.color('yellow');
         this.bind('Click', function() {
-            console.log(this);
+            Crafty.pause();
         });
     }
 })

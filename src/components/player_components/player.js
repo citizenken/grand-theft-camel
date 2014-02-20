@@ -1,19 +1,19 @@
 Crafty.c('Player', {
-	_direction: null,
-	_items: ['sword', 'sling', 'waterJug'],
-	_activeItem: 'sword',
-	_previousLocation: null,
+	_activeItem: 'Sword',
 	_currentLocation: null,
 	_currentZone: {x:null, y:null},
-	_nextLocation: null,
-	_hitPoints: 30,
-	_justTriggeredScene: false,
-	_moveSpeed: 1,
-	_thirst: 0,
-	_playerHUD: null,
+    _direction: 'DOWN',
 	_followers: [1,1,1,1,1,1,1,1],
-	_tradeItems: [],
+    _hitPoints: 30,
+    _items: ['Sword', 'Sling', 'Lance', 'EmptyWaterBag'],
+    _justTriggeredScene: false,
 	_money: 000000000000,
+    _moveSpeed: 1,
+    _nextLocation: null,
+    _playerHUD: null,
+    _previousLocation: null,
+    _thirst: 0,
+    _tradeItems: [],
 	init: function() {
 		this.requires('Actor, Fourway, Collision, Delay, FPS, Persist, Solid')
 			._playerHUD = Crafty.e('HUD');
@@ -32,16 +32,16 @@ Crafty.c('Player', {
 					case Crafty.keys.R:
 						this.fourway(this._moveSpeed * 4);
 						break;
-					case Crafty.keys['SPACE']:
-						Game.playerKeys['SPACE'] = true;
-						this.attack();
+					case Crafty.keys.SPACE:
+						Game.playerKeys.SPACE = true;
+						this.itemRouter();
 						break;
 					case Crafty.keys.E:
 						Game.playerKeys.E = true;
 						break;
 					case Crafty.keys.Y:
 						Game.playerKeys.Y = true;
-						this.changeWeapon();
+						this.changeItem();
 						break;
 					case Crafty.keys['1']:
 						Game.playerKeys['1'] = true;
@@ -62,9 +62,9 @@ Crafty.c('Player', {
 					case Crafty.keys.T:
 						Game.playerKeys.T = true;
 						var items = Game.player._playerHUD._tradeItemsEntities;
-						var selectedItem = items.indexOf(Crafty('SelectedItem'));
+						var selectedItem = items.indexOf(Crafty('SelectedTradeItem'));
 						if (selectedItem > -1) {
-							items[selectedItem].removeComponent('SelectedItem')
+							items[selectedItem].removeComponent('SelectedTradeItem');
 							items[selectedItem].css({
 				                border: 'solid black 2px',
 				                'border-radius': '5px'
@@ -92,21 +92,20 @@ Crafty.c('Player', {
 					case Crafty.keys.E:
 						Game.playerKeys.E = false;
 						break;
-					case Crafty.keys['SPACE']:
-						Game.playerKeys['SPACE'] = false;
+					case Crafty.keys.SPACE:
+						Game.playerKeys.SPACE = false;
 						break;
 				}
 			})
-			.onHit('SandDune', function(data) {
-				console.log(this._z, data[0].obj._z);
+/*			.onHit('SandDune', function(data) {
 				if (this._speed.x == this._moveSpeed || this._speed.y == this._moveSpeed) {
 					this.fourway(this._moveSpeed/2);
 				}
 			}, function () {
 				if (this._speed.x == this._moveSpeed/2 || this._speed.y == this._moveSpeed/2) {
-					// this.fourway(this._moveSpeed);
+					this.fourway(this._moveSpeed);
 				}
-			})
+			})*/
 			.onHit('Actor', function(data) {
 				var hitObject = data[0].obj;
 				var hitObjectType;
@@ -119,7 +118,6 @@ Crafty.c('Player', {
                 } else if (hitObject.has('Camel')) {
                     hitObjectType = 'Camel';
                 } else if (hitObject.has('TradeItem') && !hitObject.has('Dropped') ) {
-                	console.log('test')
                     hitObjectType = 'TradeItem';
                 }
                 this.collisionHandler(hitObjectType, hitObject);
@@ -140,7 +138,9 @@ Crafty.c('Player', {
 					this._direction = 'LEFT';
 				}
 			});
-			this.delay(function() {this.addThirst();}, 1000, -1)
+			this.delay(function() {
+				this.addThirst();
+			}, 1000, -1);
 	},
 
     addThirst: function () {
@@ -153,7 +153,7 @@ Crafty.c('Player', {
                 }
     },
 
-    changeWeapon: function() {
+    changeItem: function() {
         var currentItem = this._items.indexOf(this._activeItem);
         var nextItem = currentItem + 1;
         if (nextItem < this._items.length) {
@@ -161,7 +161,6 @@ Crafty.c('Player', {
         } else {
             this._activeItem = this._items[0];
         }
-        console.log(this._activeItem)
     },
 
     collisionHandler: function(hitObjectType, hitObject) {
@@ -184,8 +183,13 @@ Crafty.c('Player', {
                   this.x -= this._movement.x;
                   this.y -= this._movement.y;
                 }
-                if (Game.playerKeys.E) {
+                if (this._activeItem === 'EmptyWaterBag' && this._items.indexOf('EmptyWaterBag') > -1) {
                     this._thirst = 0;
+                    this._items[this._items.indexOf('EmptyWaterBag')] = 'WaterBag';
+                    this._activeItem = 'WaterBag';
+                    console.log(this._items)
+                } else {
+                	this._thirst = 0;
                 }
             break;
             case 'Scenery':
@@ -263,24 +267,33 @@ Crafty.c('Player', {
 
 	selectTradeItem: function(itemNumber) {
 		var items = this._playerHUD._tradeItemsEntities;
-	    if (!items[itemNumber].has('SelectedItem')) {
+	    if (!items[itemNumber].has('SelectedTradeItem')) {
 	        for (var i = 0; i < items.length;i++) {
-	            items[i].removeComponent('SelectedItem');
+	            items[i].removeComponent('SelectedTradeItem');
 		        items[i].css({
 	                border: 'solid black 2px',
 	                'border-radius': '5px'
 	            });
 	        }
 	        if (!items[itemNumber].has('EmptyItem')) {
-                items[itemNumber].toggleComponent('SelectedItem');
+                items[itemNumber].toggleComponent('SelectedTradeItem');
 	        }
 	    } else {
-            items[itemNumber].toggleComponent('SelectedItem');
+            items[itemNumber].toggleComponent('SelectedTradeItem');
             items[itemNumber].css({
                 border: 'solid black 2px',
                 'border-radius': '5px'
             });
 	    }
+	},
+
+	updateActiveItem: function(hud) {
+		var hudActiveItem = hud._activeItem
+		hudActiveItem.removeComponent(hud._playerActiveItem);
+		hudActiveItem._color = 'none';
+		hudActiveItem._element.style.backgroundColor = null;
+		hudActiveItem.addComponent(this._activeItem);
+		hud._playerActiveItem = this._activeItem
 	},
 
 	updateHUD: function () {
@@ -290,12 +303,15 @@ Crafty.c('Player', {
 			hud._thirstBar.w = this._thirst * 2;
 			hud._money.text(this._money);
 			if (this._tradeItems.join() !== hud._tradeItems.join()) {
-				this.updateItems(hud);
+				this.updateTradeItems(hud);
+			}
+			if (this._activeItem !== hud._playerActiveItem) {
+				this.updateActiveItem(hud);
 			}
 		}
 	},
 
-	updateItems: function(hud) {
+	updateTradeItems: function(hud) {
 		for (var x = 0; x < this._tradeItems.length; x++) {
 			var currentEntity = Crafty(hud._tradeItemsEntities[x][0]);
 			if (this._tradeItems[x] && !currentEntity.has(this._tradeItems[x])) {
@@ -314,12 +330,22 @@ Crafty.c('Player', {
 			}
 		}
 		hud._tradeItems = this._tradeItems.slice();
+	},
+
+	useWaterBag: function() {
+		if (this._thirst > 0) {
+			this._thirst = 0;
+			this._items[this._items.indexOf('WaterBag')] = 'EmptyWaterBag';
+			this._activeItem = 'EmptyWaterBag';
+			console.log(this._items)
+		}
 	}
 });
 
 Crafty.c('WhiteCharacter', {
+    _reloading: false,
 	init: function () {
-		this.requires('SpriteAnimation, WiredHitBox, Persist, SpriteAnimation, spr_white_player')
+		this.requires('SpriteAnimation, WiredHitBox, Persist, Delay, SpriteAnimation, spr_white_player')
 		.reel('PlayerUp', 400, 0, 2, 3)
 		.reel('PlayerDown', 400, 0, 0, 3)
 		.reel('PlayerRight',400, 0, 3, 3)
@@ -358,9 +384,34 @@ Crafty.c('WhiteCharacter', {
 				this.reelPosition(1);
 			}
 		});
+        this.delay(function() {
+            if (this._reloading) {
+                this._reloading = false;
+                var hudActiveItem = this._playerHUD._activeItem;
+                hudActiveItem._color = 'rgba(0,0,0,1)';
+                hudActiveItem._element.style.backgroundColor = 'rgba(0,0,0,1)';
+            }
+        }, 1500, -1);
 	},
 
-	attack: function() {
+	itemRouter: function() {
+		switch (this._activeItem) {
+			case 'Sword':
+				this.attackSword();
+				break;
+			case 'WaterBag':
+				this.useWaterBag();
+				break;
+			case 'Lance':
+				this.attackLance();
+				break;
+			case 'Sling':
+				this.attackSling();
+				break;
+		}
+	},
+
+	attackSword: function() {
 		var direction = this._direction;
 		switch (direction)
 			{
@@ -379,6 +430,35 @@ Crafty.c('WhiteCharacter', {
 		if (this.hit('Actor')) {
 			var actor = this.hit('Actor')[0].obj;
 			actor._hitPoints -= 1;
+		}
+	},
+
+	attackSling: function() {
+		if (!this._reloading) {
+            var hudActiveItem = this._playerHUD._activeItem;
+            hudActiveItem._color = 'rgba(0,0,0,0.3)';
+            hudActiveItem._element.style.backgroundColor = 'rgba(0,0,0,0.3)';
+            var bullet = Crafty.e('Bullet');
+            switch (this._direction) {
+                case 'UP':
+                    bullet.x = (this.x + (Game.map_grid.tile.width/2));
+                    bullet.y = this.y;
+                    break;
+                case 'DOWN':
+                    bullet.x = (this.x + (Game.map_grid.tile.width/2 + 3));
+                    bullet.y = (this.y + (Game.map_grid.tile.height/2));
+                    break;
+                case 'LEFT':
+                    bullet.x = (this.x + (Game.map_grid.tile.width/2 + 3));
+                    bullet.y = (this.y + (Game.map_grid.tile.height/2));
+                    break;
+                case 'RIGHT':
+                    bullet.x = this.x + 5;
+                    bullet.y = (this.y + (Game.map_grid.tile.height/2));
+                    break;
+            }
+            this._reloading = true;
+            bullet._direction = this._direction;
 		}
 	}
 });

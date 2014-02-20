@@ -66,7 +66,7 @@ function parsemap (mapArray, edges) {
 						var newEntity = Crafty.e('SandDune').at(x,y);
 						occupiedSquares[y][x] = {type: 'SandDune', id: newEntity[0]};
 						allObjects.push(occupiedSquares[y][x]);
-					} else if (!occupiedSquares[y][x] && randomBetween(0,25) === 1) {
+					} else if (!occupiedSquares[y][x] && randomBetween(0,50) === 1) {
 						var tradeItems = ['Fig', 'Silk', 'Incense'];
 						var randomTI = tradeItems[randomBetween(0,tradeItems.length)]
 						var newEntity = Crafty.e(randomTI + ', TradeItem').at(x,y);
@@ -111,25 +111,26 @@ function changeMap (direction) {
 	var currentMap = Game.currentMap;
 	switch (direction) {
 		case 'UP':
-			currentMap.x -= 1;
-			Crafty.scene('DesertZone');
-			Game.player.y = Game.player.y = Game.height() - Game.map_grid.tile.height;;
+				currentMap.x -= 1;
+				console.log(currentMap);
+				Crafty.scene('DesertZone');
+				Game.player.y = Game.player.y = Game.height() - Game.map_grid.tile.height;
 			break;
 		case 'DOWN':
-			currentMap.x += 1;
-			Crafty.scene('DesertZone');
-			Game.player.y = 0;
+				currentMap.x += 1;
+				Crafty.scene('DesertZone');
+				Game.player.y = 0;
 			break;
 		case 'RIGHT':
-			currentMap.y += 1;
-			Crafty.scene('DesertZone');
-			Game.player.x = 0;
+				currentMap.y += 1;
+				Crafty.scene('DesertZone');
+				Game.player.x = 0;
 			break;
 		case 'LEFT':
-			currentMap.y -= 1;
-			Crafty.scene('DesertZone');
-			Game.player.x = Game.width() - Game.map_grid.tile.width;
-			console.log(Game.player.x)
+				currentMap.y -= 1;
+				console.log(currentMap);
+				Crafty.scene('DesertZone');
+				Game.player.x = Game.width() - Game.map_grid.tile.width;
 			break;
 	}
 	return;
