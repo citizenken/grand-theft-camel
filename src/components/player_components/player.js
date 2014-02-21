@@ -12,7 +12,7 @@ Crafty.c('Player', {
     _nextLocation: null,
     _playerHUD: null,
     _previousLocation: null,
-    _thirst: 0,
+    _water: 30,
     _tradeItems: [],
 	init: function() {
 		this.requires('Actor, Fourway, Collision, Delay, FPS, Persist, Solid')
@@ -24,77 +24,82 @@ Crafty.c('Player', {
 				this.updateHUD();
 			})
 			.bind('KeyDown', function(e) {
-				switch (e.key)
-				{
-					case Crafty.keys.M:
-						Game.playerKeys.M = true;
-						break;
-					case Crafty.keys.R:
-						this.fourway(this._moveSpeed * 4);
-						break;
-					case Crafty.keys.SPACE:
-						Game.playerKeys.SPACE = true;
-						this.itemRouter();
-						break;
-					case Crafty.keys.E:
-						Game.playerKeys.E = true;
-						break;
-					case Crafty.keys.Y:
-						Game.playerKeys.Y = true;
-						this.changeItem();
-						break;
-					case Crafty.keys['1']:
-						Game.playerKeys['1'] = true;
-						this.selectTradeItem(0);
-						break;
-					case Crafty.keys['2']:
-						Game.playerKeys['2'] = true;
-						this.selectTradeItem(1);
-						break;
-					case Crafty.keys['3']:
-						Game.playerKeys['3'] = true;
-						this.selectTradeItem(2);
-						break;
-					case Crafty.keys['3']:
-						Game.playerKeys['3'] = true;
-						this.selectTradeItem(2);
-						break;
-					case Crafty.keys.T:
-						Game.playerKeys.T = true;
-						var items = Game.player._playerHUD._tradeItemsEntities;
-						var selectedItem = items.indexOf(Crafty('SelectedTradeItem'));
-						if (selectedItem > -1) {
-							items[selectedItem].removeComponent('SelectedTradeItem');
-							items[selectedItem].css({
-				                border: 'solid black 2px',
-				                'border-radius': '5px'
-				            });
-				            var droppedItem = Crafty.e(this._tradeItems[selectedItem] + ',TradeItem, Dropped');
-				            droppedItem.x = this.x;
-				            droppedItem.y = this.y;
-							this._tradeItems[selectedItem] = null;
+				if (!Game.keyPressed) {
+					Game.keyPressed = true;
+					switch (e.key) {
+						case Crafty.keys.M:
+							Game.playerKeys.M = true;
+							break;
+						case Crafty.keys.R:
+							this.fourway(this._moveSpeed * 4);
+							break;
+						case Crafty.keys.SPACE:
+							Game.playerKeys.SPACE = true;
+							this.itemRouter();
+							break;
+						case Crafty.keys.E:
+							Game.playerKeys.E = true;
+							break;
+						case Crafty.keys.Y:
+							Game.playerKeys.Y = true;
+							this.changeItem();
+							break;
+						case Crafty.keys['1']:
+							Game.playerKeys['1'] = true;
+							this.selectTradeItem(0);
+							break;
+						case Crafty.keys['2']:
+							Game.playerKeys['2'] = true;
+							this.selectTradeItem(1);
+							break;
+						case Crafty.keys['3']:
+							Game.playerKeys['3'] = true;
+							this.selectTradeItem(2);
+							break;
+						case Crafty.keys['3']:
+							Game.playerKeys['3'] = true;
+							this.selectTradeItem(2);
+							break;
+						case Crafty.keys.T:
+							Game.playerKeys.T = true;
+							var items = Game.player._playerHUD._tradeItemsEntities;
+							var selectedItem = items.indexOf(Crafty('SelectedTradeItem'));
+							if (selectedItem > -1) {
+								items[selectedItem].removeComponent('SelectedTradeItem');
+								items[selectedItem].css({
+					                border: 'solid black 2px',
+					                'border-radius': '5px'
+					            });
+					            var droppedItem = Crafty.e(this._tradeItems[selectedItem] + ',TradeItem, Dropped');
+					            droppedItem.x = this.x;
+					            droppedItem.y = this.y;
+								this._tradeItems[selectedItem] = null;
+							}
+							break;
 						}
-						break;
 				}
 			})
 			.onHit('Dropped', function() {}, function () {
 				Crafty('Dropped').removeComponent('Dropped');
 			})
 			.bind('KeyUp', function(e) {
-				switch (e.key)
-				{
-					case Crafty.keys.M:
-						Game.playerKeys.M = false;
-						break;
-					case Crafty.keys.R:
-						this.fourway(1);
-						break;
-					case Crafty.keys.E:
-						Game.playerKeys.E = false;
-						break;
-					case Crafty.keys.SPACE:
-						Game.playerKeys.SPACE = false;
-						break;
+				if (Game.keyPressed) {
+					Game.keyPressed = false;
+					switch (e.key)
+					{
+						case Crafty.keys.M:
+							Game.playerKeys.M = false;
+							break;
+						case Crafty.keys.R:
+							this.fourway(1);
+							break;
+						case Crafty.keys.E:
+							Game.playerKeys.E = false;
+							break;
+						case Crafty.keys.SPACE:
+							Game.playerKeys.SPACE = false;
+							break;
+					}
 				}
 			})
 /*			.onHit('SandDune', function(data) {
@@ -139,15 +144,15 @@ Crafty.c('Player', {
 				}
 			});
 			this.delay(function() {
-				this.addThirst();
+				this.removeWater();
 			}, 1000, -1);
 	},
 
-    addThirst: function () {
-                if (this._movement.x !== 0 || this._movement.y !== 0 && this._thirst < 30) {
-                    this._thirst += 1;
-                } else if (this._thirst < 30) {
-                    this._thirst += 0.5;
+    removeWater: function () {
+                if (this._movement.x !== 0 || this._movement.y !== 0 && this._water > 0) {
+                    this._water -= 1;
+                } else if (this._water > 0) {
+                    this._water -= 0.5;
                 } else if (this._hitPoints > 0) {
                     this._hitPoints -= 0.5;
                 }
@@ -184,12 +189,12 @@ Crafty.c('Player', {
                   this.y -= this._movement.y;
                 }
                 if (this._activeItem === 'EmptyWaterBag' && this._items.indexOf('EmptyWaterBag') > -1) {
-                    this._thirst = 0;
+                    this._water = 30;
                     this._items[this._items.indexOf('EmptyWaterBag')] = 'WaterBag';
                     this._activeItem = 'WaterBag';
                     console.log(this._items)
                 } else {
-                	this._thirst = 0;
+                	this._water = 30;
                 }
             break;
             case 'Scenery':
@@ -300,7 +305,7 @@ Crafty.c('Player', {
 		var hud = this._playerHUD;
 		if (hud) {
 			hud._hpBar.w = this._hitPoints * 2;
-			hud._thirstBar.w = this._thirst * 2;
+			hud._thirstBar.w = this._water * 2;
 			hud._money.text(this._money);
 			if (this._tradeItems.join() !== hud._tradeItems.join()) {
 				this.updateTradeItems(hud);
@@ -333,8 +338,8 @@ Crafty.c('Player', {
 	},
 
 	useWaterBag: function() {
-		if (this._thirst > 0) {
-			this._thirst = 0;
+		if (this._water < 30) {
+			this._water = 30;
 			this._items[this._items.indexOf('WaterBag')] = 'EmptyWaterBag';
 			this._activeItem = 'EmptyWaterBag';
 			console.log(this._items)

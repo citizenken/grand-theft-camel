@@ -87,22 +87,41 @@ Crafty.c('TargetMovement', {
 Crafty.c('Grid', {
 	_paused: false,
 init: function() {
-	/*this.bind('KeyDown', function(e) {
-		if (e.key == Crafty.keys['ESC']) {
-			Crafty.pause();
-			console.log(Crafty.isPaused())
+	this.bind('KeyDown', function(e) {
+		if (!Game.keyPressed) {
+			Game.keyPressed = true;
+			if (e.key == Crafty.keys['ESC']) {
+				Crafty.pause();
+				console.log(Crafty.isPaused())
+			}
 		}
 	})
-	// console.log(Crafty.isPaused());
-	this.bind('Pause', function() {
-		if (!this._paused) {
-			console.log(Crafty.e('PauseBackground'));
+	this.bind('KeyUp', function(e) {
+		if (Game.keyPressed) {
+			Game.keyPressed = false;
+		/*if (e.key == Crafty.keys['ESC']) {
+			Crafty.pause(true);
 			this._paused = true;
+			console.log(Crafty.isPaused())
+		} else if (e.key == Crafty.keys['ESC']) {
+			Crafty.pause(false);
+			this._paused = false;
+			console.log(Crafty.isPaused())
+		}*/
+		}
+	})
+
+	// console.log(Crafty.isPaused());
+	this.bind('Pause', function(e) {
+		if (Crafty('PauseBackground').length === 0) {
+			Crafty.e('PauseBackground');
 		}
 	})
 	this.bind('Unpause', function() {
-		Crafty('PauseMenu').destroy();
-	})*/
+		if (Crafty('PauseBackground').length === 1) {
+			Crafty('PauseBackground').destroy();
+		}
+	})
 	this.attr({
 		w: Game.map_grid.tile.width,
 		h: Game.map_grid.tile.height
@@ -122,9 +141,9 @@ if (x === undefined && y === undefined) {
 
 Crafty.c('PauseBackground', {
 	init: function() {
-		this.requires('2D, DOM, Grid, Tint');
+		this.requires('2D, DOM, Grid, Color');
 		this.attr({x: 0, y: 0, w:Game.width(), h:Game.height()})
-		.tint("#969696", 0.3);
+		.color('rgba(0,0,0,0.3)');
 	},
 });
 
