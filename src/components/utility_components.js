@@ -92,34 +92,24 @@ init: function() {
 			Game.keyPressed = true;
 			if (e.key == Crafty.keys['ESC']) {
 				Crafty.pause();
-				console.log(Crafty.isPaused())
 			}
 		}
 	})
 	this.bind('KeyUp', function(e) {
 		if (Game.keyPressed) {
 			Game.keyPressed = false;
-		/*if (e.key == Crafty.keys['ESC']) {
-			Crafty.pause(true);
-			this._paused = true;
-			console.log(Crafty.isPaused())
-		} else if (e.key == Crafty.keys['ESC']) {
-			Crafty.pause(false);
-			this._paused = false;
-			console.log(Crafty.isPaused())
-		}*/
 		}
 	})
-
-	// console.log(Crafty.isPaused());
 	this.bind('Pause', function(e) {
 		if (Crafty('PauseBackground').length === 0) {
 			Crafty.e('PauseBackground');
+			Crafty.e('PauseMenu');
 		}
 	})
 	this.bind('Unpause', function() {
 		if (Crafty('PauseBackground').length === 1) {
 			Crafty('PauseBackground').destroy();
+			Crafty('PauseMenu').destroy();
 		}
 	})
 	this.attr({
@@ -150,7 +140,7 @@ Crafty.c('PauseBackground', {
 Crafty.c('PauseMenu', {
 	init: function() {
 		this.requires('2D, DOM, Color');
-		this.attr;
+		// this.attr({x: Crafty.viewport.x + 75, y: Crafty.viewport.y - 75, w:250, h:100})
 		this.color('black');
 	},
 });
@@ -208,14 +198,6 @@ Crafty.c('Actor', {
 			}
 			return false;
 		}
-});
-
-Crafty.c('Void', {
-	init: function() {
-		this.requires('Actor, Color, Tint');
-		this.tint('#969696', 0.3);
-		this.color('green');
-	}
 });
 
 Crafty.c('EmptySpace', {

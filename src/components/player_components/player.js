@@ -24,8 +24,6 @@ Crafty.c('Player', {
 				this.updateHUD();
 			})
 			.bind('KeyDown', function(e) {
-				if (!Game.keyPressed) {
-					Game.keyPressed = true;
 					switch (e.key) {
 						case Crafty.keys.M:
 							Game.playerKeys.M = true;
@@ -77,14 +75,11 @@ Crafty.c('Player', {
 							}
 							break;
 						}
-				}
 			})
 			.onHit('Dropped', function() {}, function () {
 				Crafty('Dropped').removeComponent('Dropped');
 			})
 			.bind('KeyUp', function(e) {
-				if (Game.keyPressed) {
-					Game.keyPressed = false;
 					switch (e.key)
 					{
 						case Crafty.keys.M:
@@ -100,7 +95,6 @@ Crafty.c('Player', {
 							Game.playerKeys.SPACE = false;
 							break;
 					}
-				}
 			})
 /*			.onHit('SandDune', function(data) {
 				if (this._speed.x == this._moveSpeed || this._speed.y == this._moveSpeed) {
@@ -192,7 +186,6 @@ Crafty.c('Player', {
                     this._water = 30;
                     this._items[this._items.indexOf('EmptyWaterBag')] = 'WaterBag';
                     this._activeItem = 'WaterBag';
-                    console.log(this._items)
                 } else {
                 	this._water = 30;
                 }
@@ -213,7 +206,6 @@ Crafty.c('Player', {
                 }
             break;
             case 'TradeItem':
-            // console.log(this._tradeItems.length);
                 if (this._tradeItems.length < 3) {
             		this._tradeItems.push(hitObject._itemType);
             		hitObject.destroy();
@@ -342,7 +334,6 @@ Crafty.c('Player', {
 			this._water = 30;
 			this._items[this._items.indexOf('WaterBag')] = 'EmptyWaterBag';
 			this._activeItem = 'EmptyWaterBag';
-			console.log(this._items)
 		}
 	}
 });
