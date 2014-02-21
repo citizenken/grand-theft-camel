@@ -85,15 +85,43 @@ Crafty.c('TargetMovement', {
 // The Grid component allows an element to be located
 //  on a grid of tiles
 Crafty.c('Grid', {
+	_paused: false,
 init: function() {
 	this.bind('KeyDown', function(e) {
-		if (e.key === Crafty.keys.ESC) {
-			Crafty.pause();
+		if (!Game.keyPressed) {
+			Game.keyPressed = true;
+			if (e.key == Crafty.keys['ESC']) {
+				Crafty.pause();
+				console.log(Crafty.isPaused())
+			}
 		}
-	});
-	this.bind('Pause', function() {
-		// Crafty.e('PauseBox').draw();
-	});
+	})
+	this.bind('KeyUp', function(e) {
+		if (Game.keyPressed) {
+			Game.keyPressed = false;
+		/*if (e.key == Crafty.keys['ESC']) {
+			Crafty.pause(true);
+			this._paused = true;
+			console.log(Crafty.isPaused())
+		} else if (e.key == Crafty.keys['ESC']) {
+			Crafty.pause(false);
+			this._paused = false;
+			console.log(Crafty.isPaused())
+		}*/
+		}
+	})
+
+	// console.log(Crafty.isPaused());
+	this.bind('Pause', function(e) {
+		if (Crafty('PauseBackground').length === 0) {
+			Crafty.e('PauseBackground');
+		}
+	})
+	this.bind('Unpause', function() {
+		if (Crafty('PauseBackground').length === 1) {
+			Crafty('PauseBackground').destroy();
+		}
+	})
 	this.attr({
 		w: Game.map_grid.tile.width,
 		h: Game.map_grid.tile.height
@@ -111,13 +139,61 @@ if (x === undefined && y === undefined) {
 }
 });
 
-Crafty.c('PauseBox', {
+Crafty.c('PauseBackground', {
 	init: function() {
-		this.requires('2D, DOM, text, Color');
-		this.attr({x:(Game.map_grid.width/2), y:(Game.map_grid.height/2), w:200, h:200, z:50});
+		this.requires('2D, DOM, Grid, Color');
+		this.attr({x: 0, y: 0, w:Game.width(), h:Game.height()})
+		.color('rgba(0,0,0,0.3)');
+	},
+});
+
+Crafty.c('PauseMenu', {
+	init: function() {
+		this.requires('2D, DOM, Color');
+		this.attr;
 		this.color('black');
 	},
 });
+
+Crafty.c('TextBox', {
+	init: function() {
+		this.requires('2D, DOM, Color');
+		this.attr({w:300, h:200});
+		this.color('white');
+		this.getLocation()
+	},
+
+	getLocation: function() {
+		var dirmodx;
+		var dirmody;
+		var viewportX = Crafty.viewport.x;
+		var viewportY = Crafty.viewport.y;
+		if (Crafty.viewport.x < -1) {
+			dirmodx = -1;
+		} else if (Crafty.viewport.x === 0) {
+			dirmodx = 0
+		} else {
+			dirmodx = 1;
+		}
+
+		if (Crafty.viewport.y < -1) {
+			dirmody = -1;
+		} else if (Crafty.viewport.y === 0) {
+			dirmody = 0
+		} else {
+			dirmody = 1;
+		}
+		console.log(Crafty.viewport.y, Crafty.viewport.y + (Crafty.viewport.height*dirmody))
+		this.attr({x:viewportX + (50*dirmodx), y:viewportY + (50*dirmody)})
+		console.log(this.x, this.y)
+	}
+});
+
+Crafty.c('Void', {
+	init: function() {
+		this.requires('Actor');
+	}
+})
 
 Crafty.c('Actor', {
 	init: function() {

@@ -14,7 +14,8 @@ module.exports = function(grunt) {
         // for production
         beautify: true, // format the output (de-minifies)
         compress: false, // minify code
-        mangle: false // minify variable names
+        mangle: false
+         // minify variable names
         // for sharing
         // beautify: true, // format the output (de-minifies)
         // compress: false, // minify code
