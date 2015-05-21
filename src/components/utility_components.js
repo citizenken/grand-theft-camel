@@ -88,15 +88,6 @@ Crafty.c('Grid', {
 	_paused: false,
 init: function() {
 	this.bind('KeyDown', function(e) {
-<<<<<<< HEAD
-		if (e.key === Crafty.keys.ESC) {
-			Crafty.pause();
-		}
-	});
-	this.bind('Pause', function() {
-		// Crafty.e('PauseBox').draw();
-	});
-=======
 		if (!Game.keyPressed) {
 			Game.keyPressed = true;
 			if (e.key == Crafty.keys['ESC']) {
@@ -131,7 +122,6 @@ init: function() {
 			Crafty('PauseBackground').destroy();
 		}
 	})
->>>>>>> 12c660251832b348482e5d2a1c4b6d1f3bd96eb8
 	this.attr({
 		w: Game.map_grid.tile.width,
 		h: Game.map_grid.tile.height
@@ -165,8 +155,6 @@ Crafty.c('PauseMenu', {
 	},
 });
 
-<<<<<<< HEAD
-=======
 Crafty.c('TextBox', {
 	init: function() {
 		this.requires('2D, DOM, Color');
@@ -207,7 +195,6 @@ Crafty.c('Void', {
 	}
 })
 
->>>>>>> 12c660251832b348482e5d2a1c4b6d1f3bd96eb8
 Crafty.c('Actor', {
 	init: function() {
 		this.requires('2D, Canvas, Grid');

@@ -24,7 +24,7 @@ Crafty.c('Player', {
 				this.updateHUD();
 			})
 			.bind('KeyDown', function(e) {
-				if (!Game.keyPressed) {
+				if (Game.keyPressed) {
 					Game.keyPressed = true;
 					switch (e.key) {
 						case Crafty.keys.M:

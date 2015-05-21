@@ -1,2 +1,3 @@
 node_modules
 lib/grand-theft-camel.js
+*.DS_Store
